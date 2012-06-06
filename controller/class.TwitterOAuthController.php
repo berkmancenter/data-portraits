@@ -17,10 +17,13 @@ class TwitterOAuthController {
             // Saving it in a session var
             $_SESSION['access_token'] = $access_token;
             
+            $user_info = $twitteroauth->get('account/verify_credentials');
+            print_r($user_info);
+            
             mysql_connect("localhost","root","");
             mysql_select_db("dataportraits");
             
-            if(isset($user_info->error)){
+            if(isset($user_info->error)) {
                 // Error
                 header('Location: '.LOGIN_LINK);
             } else {
@@ -56,10 +59,12 @@ class TwitterOAuthController {
                     header('Location: '.CRAWLER_LINK);
                 }
             }
+            
         } else {
             // error
             header('Location: '.LOGIN_LINK);
         }
     }
-    
 }
+
+
