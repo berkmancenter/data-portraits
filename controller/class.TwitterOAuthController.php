@@ -1,4 +1,6 @@
 <?php
+require_once("init.php");
+require_once(ROOT_PATH."/model/class.UsersTable.php");
 
 class TwitterOAuthController {
     
@@ -18,33 +20,27 @@ class TwitterOAuthController {
             $_SESSION['access_token'] = $access_token;
             
             $user_info = $twitteroauth->get('account/verify_credentials');
-            print_r($user_info);
-            
-            mysql_connect("localhost","root","");
-            mysql_select_db("dataportraits");
             
             if(isset($user_info->error)) {
                 // Error
                 header('Location: '.LOGIN_LINK);
             } else {
                 // find the user by its ID
-                $query = mysql_query("SELECT * FROM users WHERE oauth_provider = 'twitter'
-                                     AND oauth_uid = ". $user_info->id);
-                $result = mysql_fetch_array($query);
-        
+                $result = UsersTable::findByID($user_info->id);
+                
+                $vals = array(
+                    'oauth_token' => $access_token['oauth_token'],
+                    'oauth_token_secret' => $access_token['oauth_token_secret'],
+                    'id' => $user_info->id,
+                    'screen_name' => $user_info->screen_name
+                );
+                
                 // If not, add it to the database
                 if(empty($result)){
-                    $query = mysql_query("INSERT INTO users (oauth_provider, oauth_uid,
-                                         username, oauth_token, oauth_secret) VALUES
-                                         ('twitter', {$user_info->id},
-                                         '{$user_info->screen_name}',
-                                         '{$access_token['oauth_token']}',
-                                         '{$access_token['oauth_token_secret']}')");
-                    $query = mysql_query("SELECT * FROM users WHERE id = " . mysql_insert_id());
-                    $result = mysql_fetch_array($query);
+                    $result = UsersTable::addUser($vals);
                 } else {
                     // Update the tokens
-                    $query = mysql_query("UPDATE users SET oauth_token = '{$access_token['oauth_token']}', oauth_secret = '{$access_token['oauth_token_secret']}' WHERE oauth_provider = 'twitter' AND oauth_uid = {$user_info->id}");
+                    $query = UsersTable::updateUser($vals);
                 }
             
                 $_SESSION['id'] = $result['id'];
