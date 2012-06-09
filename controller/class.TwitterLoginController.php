@@ -16,7 +16,7 @@ class TwitterLoginController {
         // If everything goes well..
         if($twitteroauth->http_code==200) {
             // Generate the URL and redirect
-            $url = $twitteroauth->getAuthorizeURL($request_token['oauth_token']);
+            $url = $twitteroauth->getAuthorizeURL($_SESSION['oauth_token']);
             header('Location: '. $url);
         } else {
             die('Something wrong happened.');

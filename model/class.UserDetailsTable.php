@@ -18,6 +18,7 @@ class UserDetailsTable {
         $query = $db->query($sql);
         $result = array();
         while ($row = $db->fetchArray($query)) {
+            $row['userdata'] = json_decode($row['userdata']);
             array_push($result, $row);
         }
         return $result;

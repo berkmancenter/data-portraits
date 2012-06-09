@@ -1,11 +1,11 @@
 <?php
 require_once(ROOT_PATH."/controller/class.DPController.php");
 
-class HomePageController extends DPController {
+class LandingPageController extends DPController {
     
     public function go() {
         
-        $this->setViewTemplate("home.tpl");
+        $this->setViewTemplate("view.tpl");
         $this->generateView();
         
     }

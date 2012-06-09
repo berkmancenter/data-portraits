@@ -52,7 +52,8 @@ class TwitterOAuthController {
             
                 if(!empty($_SESSION['username'])){
                     // User is logged in, redirect
-                    header('Location: '.CRAWLER_LINK);
+                    $url = SITE_ROOT_PATH."pages/home.php";
+                    header('Location: '. $url);
                 }
             }
             
