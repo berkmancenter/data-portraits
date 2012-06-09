@@ -1,7 +1,7 @@
 <?php
-require_once("crawler/model/class.Crawler.php");
+chdir("..");
+require_once("init.php");
+require_once(ROOT_PATH."/controller/class.HomePageController.php");
 
-$crawler = new Crawler("ginatrapani");
-//print_r($crawler->getFriends());
-//print_r($crawler->getFollowers());
-print_r($crawler->userShowAPI());
+$controller = new HomePageController();
+echo $controller->go();
