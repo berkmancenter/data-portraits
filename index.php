@@ -1,6 +1,6 @@
 <?php
-require_once("crawler/class.Crawler.php");
+require_once("init.php");
+require_once(ROOT_PATH."/controller/class.LandingPageController.php");
 
-$crawler = new Crawler("ginatrapani");
-$crawler->getFriends();
-echo $crawler->getFollowers();
+$controller = new LandingPageController();
+echo $controller->go();
