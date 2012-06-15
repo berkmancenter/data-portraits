@@ -1,0 +1,27 @@
+html {height: 100%;}
+body {height:95%;}
+
+#background {
+    width: 100%; 
+    height: 100%; 
+    position: absolute; 
+    left: 0px; 
+    top: 0px; 
+    z-index: -1;
+}
+
+.stretch { width:100%; height:100%;}
+
+#logo {height: 35px; padding: 10px; padding-top: 0px}
+#org {padding-top: 6px;}
+#berkman {font-weight: bold; font-size:0.7em;}
+#harvard {font-size: 0.6em;}
+#appname {margin-top: -5px; margin-left:85px;}
+#mainTable {width: 90%; margin: auto; margin-top:3%;}
+
+.column_main {width:47%;}
+.column_separator {width:6%;}
+.left {float: left;}
+.right {float:right;}
+.center {text-align:center;}
+.center_image {margin: auto;}

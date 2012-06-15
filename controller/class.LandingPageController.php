@@ -5,7 +5,7 @@ class LandingPageController extends DPController {
     
     public function go() {
         
-        $this->setViewTemplate("view.tpl");
+        $this->setViewTemplate("landingpage.tpl");
         $this->generateView();
         
     }
