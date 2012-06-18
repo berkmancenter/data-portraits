@@ -1,0 +1,63 @@
+body {font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;}
+
+.info {
+    -moz-border-radius: 30px;
+    -webkit-border-radius: 30px;
+    padding:1px 10px;
+}
+.yellow_back {background-color:rgba(255,210,0,0.2);}
+.blue_back {background-color:rgba(4,158,255,0.2);}
+#mainTable h2 {text-align: center;}
+
+
+/* ----------- SEARCH BOX ---------------- */
+#search_box {
+    background:-moz-linear-gradient(top, #ffd73a, #ffa500);
+    background:-webkit-gradient(linear, 0 0, 0 100%, from(#ffd73a), to(#ffa500));
+    border:1px solid #d28703;
+    border-radius:5px;
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
+    -moz-box-shadow:inset 0 1px #ffff90, inset 0 -2px 5px #ffd05d, 0 0 0 4px rgba(255,255,255,0.65);
+    -webkit-box-shadow:inset 0 1px #ffff90, inset 0 -2px 5px #ffd05d, 0 0 0 4px rgba(255,255,255,0.65);
+    padding:9px;
+    width:80%;
+    margin:auto;
+    margin-top: 200px;
+}
+
+#search_box .wrapper {
+    background:#fff;
+    border:1px solid #d28703;
+    -moz-border-radius:2px;
+    -webkit-border-radius:2px;
+    -moz-box-shadow:inset 0 1px 2px rgba(0,0,0,.3), 0 1px #ff0;
+    -webkit-box-shadow:inset 0 1px 2px rgba(0,0,0,.3), 0 1px #ff0;
+    padding:13px 0 10px 8px;
+    position:relative;
+}
+
+#search_box input { border:none; color:#333; font:bold 24px Helvetica, Arial, sans-serif; width:90%; }
+#search_box button {
+    background:-moz-linear-gradient(top, #453e26, #000);
+    background:-webkit-gradient(linear, 0 0, 0 100%, from(#453e26), to(#000));
+    border:1px solid #000;
+    -moz-border-radius:2px;
+    -webkit-border-radius:2px;
+    -moz-box-shadow:inset 0 -2px 3px #193544, inset 0 1px #907817, 0 1px 1px rgba(0,0,0,4);
+    -webkit-box-shadow:inset 0 -2px 3px #193544, inset 0 1px #907817, 0 1px 1px rgba(0,0,0,.4);
+    cursor:pointer;
+    height:54px;
+    position:absolute;
+    right:2px;
+    top:2px;
+    width:54px;
+}
+
+.font_size_10 { font-size: 10px; }
+.font_size_12 { font-size: 12px; }
+.font_size_14 { font-size: 14px; }
+.font_size_16 { font-size: 16px; }
+.font_size_18 { font-size: 18px; }
+.font_size_20 { font-size: 20px; }
+.font_size_22 { font-size: 22px; }
