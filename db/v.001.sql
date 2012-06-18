@@ -16,7 +16,7 @@ CREATE TABLE  lookup (
     UNIQUE (id)
 ) ENGINE=MyISAM;
 
-CREATE TABLE  userDetails (
+CREATE TABLE  userdetails (
     id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(255) NOT NULL,
     type VARCHAR(255) NOT NULL,
