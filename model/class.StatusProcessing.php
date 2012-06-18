@@ -68,8 +68,11 @@ class StatusProcessing {
         return $urls;
     }
     
-    public static function findWords($statuses) {
+    public static function findWords($statuses, &$maximum, &$avg) {
         $words_list = array();
+        $maximum = 0;
+        $count_instances = 0;
+        $count_distinct_words = 0;
         $stop_words = Utils::getStopWords();
         foreach ($statuses as $status) {
             $text = $status->text_processed;
@@ -77,12 +80,60 @@ class StatusProcessing {
             $words = explode(" ", $text);
             foreach ($words as $word) {
                 if (isset($words_list[$word])) {
-                    $words_list[$word]++;
+                    $count_instances++;
+                    $words_list[$word]['total']++;
+                    if ($status->urls) {
+                        $words_list[$word]['url']++;
+                    }
+                    if ($words_list[$word]['total'] > $maximum) {
+                        $maximum = $words_list[$word]['total'];
+                    }
                 } elseif (!in_array($word, $stop_words)) {
-                    $words_list[$word] = 1;
+                    $count_distinct_words++;
+                    $count_instances++;
+                    $words_list[$word]['total'] = 1;
+                    $words_list[$word]['url'] = 0;
+                    if ($status->urls) {
+                        $words_list[$word]['url']++;
+                    }
+                    if ($words_list[$word]['total'] > $maximum) {
+                        $maximum = $words_list[$word]['total'];
+                    }
                 }
             }
         }
+        $avg = $count_instances / $count_distinct_words;
         return $words_list; 
+    }
+    
+    public static function getNumberOfStatuses($statuses) {
+        return count($statuses);
+    }
+    
+    public static function getNumberOfDays ($status1, $status2) {
+        $date1 = self::convertDate($status1->created);
+        $date2 = self::convertDate($status2->created);
+        $diff = (strtotime($date1) - strtotime($date2))/(60*60*24);
+        return $diff;
+    }
+    
+    private static function convertDate($date_string) {
+        $date = explode(" ", $date_string);
+        $month = $date[1];
+        switch ($month) {
+            case 'Jan': $month = 1; break;
+            case 'Feb': $month = 2; break;
+            case 'Mar': $month = 3; break;
+            case 'Apr': $month = 4; break;
+            case 'May': $month = 5; break;
+            case 'Jun': $month = 6; break;
+            case 'Jul': $month = 7; break;
+            case 'Aug': $month = 8; break;
+            case 'Sep': $month = 9; break;
+            case 'Oct': $month = 10; break;
+            case 'Nov': $month = 11; break;
+            case 'Dec': $month = 12; break;
+        }
+        return $date[2]."-".$month."-".$date[5];
     }
 }

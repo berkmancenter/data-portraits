@@ -1,14 +1,12 @@
-<html>
-    <head>
-        <title>Data Portraits</title>
-    </head>
-    <body>
-        <form method="post" action="{$site_root_path}crawler/crawl.php">
-        <p>
-            <label for="name">Username: </label>
-            <input type="text" name="username"/>
-        </p>
-        <p><input type="submit" id="submit" value="Submit" name="submit"/></p>
-        </form>
-    </body>
-</html>
+{include file="_header.tpl"}
+    <form method="post" action="{$site_root_path}crawler/crawl.php" id="search_box">
+	<div class="wrapper">
+		<input type="text" id="username" name="username"
+                    placeholder="Enter Username To Create Data Portrait" />
+		<button type="submit" class="search_btn">
+                    <img src="{$site_root_path}assets/images/search_icon.png"
+                        title="Search" />
+                </button>
+	</div>
+    </form>
+{include file="_footer.tpl"}

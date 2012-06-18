@@ -1,0 +1,54 @@
+.bubbleInfo { position: relative; text-align: center;}
+.trigger { position: absolute; }
+
+/* Bubble pop-up */
+.popup { position: absolute; display: none; z-index: 50; border-collapse: collapse; }
+
+.popup table#popup-contents {
+    padding: 3px;
+    border: solid 2px #a0c7ff;
+    font-size: 12px;
+    line-height: 1.2em;
+    background-color: #fff;
+    color: #666;
+    font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", sans-serif;
+    -moz-border-radius: 8px;
+    -webkit-border-radius: 8px;
+}
+
+#popup_data { width: 300px; }
+#avatar_popup {margin-top: 6px; margin-right: 6px;}
+#username_popup {font-size: 14px; margin-bottom: -8px;}
+#location_popup {margin-bottom: -8px; color: #3E3E3E;}
+#description_popup {margin-bottom: -8px;}
+.stats_popup {font-weight: bold;}
+
+
+#tailShadow {
+    position:absolute;
+    bottom:128px;
+    left:173px;
+    width:0;height:0;
+    border:solid 2px #fff;
+    box-shadow:0 0 10px 1px #555;
+}
+
+#tail1 {
+    position:absolute;
+    bottom:127px;
+    left:165px;
+    width:0;height:0;
+    border-color:transparent transparent #a0c7ff transparent;
+    border-width:10px;
+    border-style:solid;
+}
+
+#tail2 {
+    position:absolute;
+    bottom:125px;
+    left:165px;
+    width:0;height:0;
+    border-color: transparent transparent #f9f9f9 transparent;
+    border-width:10px;
+    border-style:solid;
+}
