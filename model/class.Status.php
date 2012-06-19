@@ -1,4 +1,5 @@
 <?php
+require_once(ROOT_PATH."/model/class.Utils.php");
 
 class Status {
     
@@ -71,6 +72,11 @@ class Status {
      * @var array
      */
     var $urls;
+    /**
+     *
+     * @var array
+     */
+    var $emoticons;
     
     /**
      * Constructor
@@ -93,6 +99,8 @@ class Status {
             $this->hashtags = self::processHashTags($val, $this->text_processed);
             $this->mentions = self::processUserMentions($val, $this->text_processed);
             $this->urls = self::processURLs($val, $this->text_processed);
+            $this->emoticons = self::processEmoticons($val, $this->text_processed);
+            $this->text_processed = strtolower(Utils::preprocessTweet($this->text_processed));
         }
     }
     
@@ -150,5 +158,36 @@ class Status {
                                         $entity->indices[0],$length);
         }
         return $urls;
+    }
+    
+    private static function processEmoticons($tweet, &$text_processed) {
+        $text_processed = str_replace('&lt;','<', $text_processed);
+        $text_processed = str_replace('&gt;','>', $text_processed);
+        $text = strtoupper($text_processed);
+        $emoticons = array(
+            ":)", ":-)", ":]", "=)", ":-(", ":(", ":[", "=(", ":-P", ":P",
+            "=P", ":-D", ":D", "=D", ":-O", ":O", ";-)", ";)", ":-/", ":/",
+            ":'(", ":-*", ":*", "^_^", "<3", "-_-", "O.O"
+        );
+        $smileys = array();
+        foreach ($emoticons as $emoticon) {
+            $pos = strpos($text, $emoticon);
+            while (!($pos === false))  {
+                array_push($smileys, $emoticon);
+                if (($len = strlen($emoticon)) == 2) {
+                    $replace = "  ";
+                } else {
+                    $replace = "   ";
+                }
+                $text_processed = substr_replace($text_processed, $replace,
+                                                 $pos, $len);
+                $text = substr_replace($text, $replace, $pos, $len);
+                $pos = strpos($text, $emoticon);
+            }
+        }
+        if (!count($smileys)) {
+            return false;
+        }
+        return $smileys;
     }
 }

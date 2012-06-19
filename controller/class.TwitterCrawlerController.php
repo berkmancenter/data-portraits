@@ -122,11 +122,11 @@ class TwitterCrawlerController extends DPController {
             }
         //}
         
-        //$user_timeline = StatusProcessing::getUserTimeline($connection, $vals);
-        //$count = StatusProcessing::getNumberOfStatuses($user_timeline);
-        //$time_taken = StatusProcessing::getNumberOfDays(
-        //              $user_timeline[0], $user_timeline[$count-1]);
-        //$words = StatusProcessing::findWords($user_timeline, $max, $avg);;
+        $user_timeline = StatusProcessing::getUserTimeline($connection, $vals);
+        $count = StatusProcessing::getNumberOfStatuses($user_timeline);
+        $time_taken = StatusProcessing::getNumberOfDays(
+                      $user_timeline[0], $user_timeline[$count-1]);
+        $words = StatusProcessing::findWords($user_timeline, $max, $avg);;
         
         // Anil Dash
         //$count = 173;
@@ -135,12 +135,13 @@ class TwitterCrawlerController extends DPController {
         //$avg = 1.2855;
         
         // Gina Trapani
-        $count = 173;
-        $time_taken = 33;
-        $max = 11;
-        $avg = 1.35;
+        //$count = 173;
+        //$time_taken = 33;
+        //$max = 11;
+        //$avg = 1.35;
         
-        $words = 0;
+        //$words = 0;
+        
         $array = array(
             'user' => $user,
             'words' => $words,

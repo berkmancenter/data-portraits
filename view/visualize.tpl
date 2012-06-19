@@ -1,6 +1,6 @@
 {include file="_header.tpl"}
 <script type="text/javascript">{$user_data}</script>
-<script type="text/javascript" src="{$site_root_path}tests/ginatrapani_18-06-2012.js"></script>
+<script type="text/javascript">{$words}</script>
 <script type="text/javascript" src="{$site_root_path}extlib/jQCloud/jqcloud-1.0.0.min.js"></script>
 <link rel="stylesheet" type="text/css" href="{$site_root_path}extlib/jQCloud/jqcloud.css" />
 
@@ -47,16 +47,16 @@
         item['text'] = word;
         item['weight'] = words[word]['total'];
         var html = new Array();
-        if (color <= 10) { html['style']= "color: #8d634b"; }
-        else if (color <= 20) { html['style']= "color: #f6bc51"; }
-        else if (color <= 30) { html['style']= "color: #000000"; }
-        else if (color <= 40) { html['style']= "color: #ee813c"; }
-        else if (color <= 50) { html['style']= "color: #3f90d2"; }
-        else if (color <= 60) { html['style']= "color: #6cc198"; }
-        else if (color <= 70) { html['style']= "color: #4dbdc9"; }
-        else if (color <= 80) { html['style']= "color: #a9a2ce"; }
-        else if (color <= 90) { html['style']= "color: #bdbeb9"; }
-        else { html['style']= "color: #ff0000;"; }
+        if (color <= 10) { html['style']= "color: #68a1ff"; }
+        else if (color <= 20) { html['style']= "color: #4088ff"; }
+        else if (color <= 30) { html['style']= "color: #2477ff"; }
+        else if (color <= 40) { html['style']= "color: #0060ff"; }
+        else if (color <= 50) { html['style']= "color: #0057e6"; }
+        else if (color <= 60) { html['style']= "color: #004ece"; }
+        else if (color <= 70) { html['style']= "color: #0044b5"; }
+        else if (color <= 80) { html['style']= "color: #003996"; }
+        else if (color <= 90) { html['style']= "color: #002c75"; }
+        else { html['style']= "color: #002562;"; }
         item['html'] = html;
         word_list.push(item);
     }
@@ -67,8 +67,8 @@
 <style type="text/css">
       #wordcloud {
         margin: 30px auto;
-        width: 600px;
-        height: 371px;
+        width: 800px;
+        height: 471px;
         border: none;
       }
       #wordcloud span.w10, #wordcloud span.w9, #wordcloud span.w8, #wordcloud span.w7 {
