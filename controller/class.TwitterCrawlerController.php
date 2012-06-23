@@ -10,28 +10,72 @@ class TwitterCrawlerController extends DPController {
     
     public function go() {
         
-        $_POST['username']=isset($_POST['username'])?$_POST['username']:'ginatrapani';
+        $_POST['username'] = 'oprah';
         
-        if ($_POST['username'] == '') {
+        if (!isset($_POST['username']) || $_POST['username'] == '') {
             header('Location: '.ROOT_PATH."/pages/home.php");
         }
         
-        $array = self::crawl($_POST['username']);
+        $array = self::newCrawl($_POST['username']);
+        
         $user = $array['user'];
         $user_data = 'var user = ';
         $user_data .= json_encode($user);
         
+        $statuses = 'var statuses = ';
+        $statuses .= json_encode($array['user_timeline']);
+        $this->addToView('user_data', $user_data);
+        $this->addToView('statuses', $statuses);
+        
         $words = 'var words = ';
         $words .= json_encode($array['words']);
         
-        $this->setViewTemplate('visualize.tpl');
-        $this->addToView('user_data', $user_data);
         $this->addToView('words', $words);
         $this->addToView('max', $array['max']);
         $this->addToView('count', $array['count']);
         $this->addToView('avg', $array['avg']);
         $this->addToView('time_taken', $array['time_taken']);
+        
+        $this->setViewTemplate('visualize.tpl');
         $this->generateView();
+        
+    }
+    
+    private function newCrawl($username) {
+        
+        $authentication = array(
+            'token' => $_SESSION['oauth_token'],
+            'token_secret' => $_SESSION['oauth_secret']
+        );
+        
+        $vals = array(
+            'screen_name' => $username
+        );
+        $connection = new Crawler($authentication);
+        $user = UserProcessing::getUserDetails($connection, $vals);
+        if (is_array($user)) {
+            // It should be an object, hence error
+            self::identifyError($user['e_code']);
+        } else {
+            $user_timeline = StatusProcessing::getUserTimeline($connection, $vals);
+            //$user_timeline = 0;
+            
+            $count = StatusProcessing::getNumberOfStatuses($user_timeline);
+            $time_taken = StatusProcessing::getNumberOfDays(
+                          $user_timeline[0], $user_timeline[$count-1]);
+            $words = StatusProcessing::findWords($user_timeline, $max, $avg);
+            
+            $array = array(
+                'user' => $user,
+                'user_timeline' => $user_timeline,
+                'words' => $words,
+                'max' => $max,
+                'count' => $count,
+                'time_taken' => $time_taken,
+                'avg' => $avg
+            );
+            return $array;
+        }
         
     }
     
@@ -98,22 +142,6 @@ class TwitterCrawlerController extends DPController {
                 //   echo $status->text."<br/>";
                 //}
                 
-                //$count = StatusProcessing::getNumberOfStatuses($user_timeline);
-                //$time_taken = StatusProcessing::getNumberOfDays(
-                //              $user_timeline[0], $user_timeline[$count-1]);
-                //print_r(StatusProcessing::findMentions($user_timeline));
-                //echo "<br/><br/>";
-                //print_r(StatusProcessing::findHashTags($user_timeline));
-                //echo "<br/><br/>";
-                //print_r(StatusProcessing::findURLs($user_timeline));
-                //echo "<br/><br/>";
-                //$words = StatusProcessing::findWords($user_timeline, $max);
-                //echo $max;
-                //foreach ($words as $word=>$vals) {
-                //    echo $word."------";
-                //    print_r($vals);
-                //    echo "<br/>";
-                //}
                 //print_r($user_timeline);
                 //UserDetailsTable::addData($username, "user_timeline", $user_timeline);
                 //$data = UserDetailsTable::retrieveData($username);
@@ -122,33 +150,11 @@ class TwitterCrawlerController extends DPController {
             }
         //}
         
-        $user_timeline = StatusProcessing::getUserTimeline($connection, $vals);
-        $count = StatusProcessing::getNumberOfStatuses($user_timeline);
-        $time_taken = StatusProcessing::getNumberOfDays(
-                      $user_timeline[0], $user_timeline[$count-1]);
-        $words = StatusProcessing::findWords($user_timeline, $max, $avg);;
-        
-        // Anil Dash
-        //$count = 173;
-        //$time_taken = 10;
-        //$max = 12;
-        //$avg = 1.2855;
-        
-        // Gina Trapani
-        //$count = 173;
-        //$time_taken = 33;
-        //$max = 11;
-        //$avg = 1.35;
-        
-        //$words = 0;
+        $user_timeline = 0;
         
         $array = array(
             'user' => $user,
-            'words' => $words,
-            'max' => $max,
-            'count' => $count,
-            'avg' => $avg,
-            'time_taken' => $time_taken
+            'user_timeline' => $user_timeline
         );
         return $array;
     }

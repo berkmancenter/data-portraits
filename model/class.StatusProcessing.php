@@ -1,6 +1,6 @@
 <?php
 require_once(ROOT_PATH."/model/class.Status.php");
-require_once(ROOT_PATH."/extlib/PorterStemmer/PorterStemmer.php");
+require_once(ROOT_PATH."/model/class.SentimentDictionary.php");
 require_once(ROOT_PATH."/model/class.Utils.php");
 
 class StatusProcessing {
@@ -241,6 +241,29 @@ class StatusProcessing {
         return $words_list; 
     }
     
+    public static function findSentiment($statuses) {
+        $dict = new SentimentDictionary();
+        $status_sentiment = array();
+        foreach ($statuses as $status) {
+            $words = explode(' ', $status->text_processed);
+            $score = 0;
+            foreach ($words as $word) {
+                $score += $dict->getWordSentiment($word);
+            }
+            $score = $score/count($words);
+            if ($status->emoticons != false) {
+                $emoticon_score = 0;
+                foreach ($status->emoticons as $emoticon) {
+                    $emoticon_score += $dict->getEmoticonSentiment($emoticon);
+                }
+                $emoticon_avg = $emoticon_score/count($status->emoticons);
+                $score = ($score + 2*$emoticon_avg)/3;
+            }
+            array_push($status_sentiment, $score);
+        }
+        unset($dict);
+        return $status_sentiment;
+    }
     
     public static function getNumberOfStatuses($statuses) {
         return count($statuses);

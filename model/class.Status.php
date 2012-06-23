@@ -89,7 +89,6 @@ class Status {
             $this->created = $val->created_at;
             $this->text = $val->text;
             $this->text_processed = $val->text;
-            $this->source = $val->source;
             $this->in_reply_to_status = $val->in_reply_to_status_id_str;
             $this->in_reply_to_user = $val->in_reply_to_screen_name;
             $this->coordinates = $val->coordinates;
@@ -99,7 +98,11 @@ class Status {
             $this->hashtags = self::processHashTags($val, $this->text_processed);
             $this->mentions = self::processUserMentions($val, $this->text_processed);
             $this->urls = self::processURLs($val, $this->text_processed);
-            $this->emoticons = self::processEmoticons($val, $this->text_processed);
+            
+            $this->text_processed = self::removeHTMLEntities($this->text_processed);
+            $this->text = self::removeHTMLEntities($this->text);
+            
+            $this->emoticons = self::processEmoticons($this->text_processed);
             $this->text_processed = strtolower(Utils::preprocessTweet($this->text_processed));
         }
     }
@@ -148,7 +151,7 @@ class Status {
         }
         $urls = array();
         foreach ($tweet->entities->urls as $entity) {
-            array_push($urls, $entity->expanded_url);
+            array_push($urls, self::removeAmpersand($entity->expanded_url));
             // Process the tweet by removing the mention
             $length = $entity->indices[1]-$entity->indices[0];
             $empty_string = null;
@@ -160,9 +163,7 @@ class Status {
         return $urls;
     }
     
-    private static function processEmoticons($tweet, &$text_processed) {
-        $text_processed = str_replace('&lt;','<', $text_processed);
-        $text_processed = str_replace('&gt;','>', $text_processed);
+    private static function processEmoticons(&$text_processed) {
         $text = strtoupper($text_processed);
         $emoticons = array(
             ":)", ":-)", ":]", "=)", ":-(", ":(", ":[", "=(", ":-P", ":P",
@@ -189,5 +190,20 @@ class Status {
             return false;
         }
         return $smileys;
+    }
+    
+    private static function removeHTMLEntities($text) {
+        $text = str_replace('&lt;','<', $text);
+        $text = str_replace('&gt;','>', $text);
+        $text = str_replace('&amp;','&', $text);
+        $text = str_replace('&','and', $text);
+        $text = str_replace('&quot;','"', $text);
+        $text = str_replace('&#39;',"'", $text);
+        return $text;
+    }
+    
+    private static function removeAmpersand($text) {
+        $text = str_replace('&amp;', '&', $text);
+        return str_replace('&', '[AND]', $text);
     }
 }
