@@ -1,6 +1,6 @@
 <?php
 
-define("APP_TITLE", "Data Portraits - Berkman Society for Internet and Society");
+define("APP_TITLE", "Data Portraits - Berkman Center for Internet and Society");
 
 define("CONSUMER_KEY", "yGxmTdRZzJe6A14QZMA");
 define("CONSUMER_KEY_SECRET", "YqDtaiYnU1O6irng5AUbQJWymcEu8Hb9k75CQJAZM");
