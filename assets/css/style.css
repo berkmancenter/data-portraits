@@ -61,3 +61,23 @@ body {font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;}
 .font_size_18 { font-size: 18px; }
 .font_size_20 { font-size: 20px; }
 .font_size_22 { font-size: 22px; }
+
+#timeline { list-style-type: none; }
+.status_date {color: rgba(0,0,0,.7)}
+
+.mainMenu {list-style-type: none;}
+.mainMenu ul {display: inline;}
+.mainMenu ul li {display: inline;}
+#spinner {
+    display:    none;
+    position:   fixed;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    background: rgba( 255, 255, 255, 1 ) 
+                url('../images/loader.gif') 
+                50% 50% 
+                no-repeat;
+}
