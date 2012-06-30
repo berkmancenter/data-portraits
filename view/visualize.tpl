@@ -5,8 +5,15 @@
 <script type="text/javascript">
     var json_statuses = null;
     
+    function removeTopics() {
+        for (var i=0; i<10; i++) {
+            $(".tweet").removeClass("bgcolor"+i);
+        }
+    }
+    
     function sentiment() {
         $("#spinner").show();
+        removeTopics();
         $.ajax({
             type: "POST",
             url: "{$site_root_path}pages/sentiment.php",
@@ -20,6 +27,7 @@
     
     function wordAnalysis() {
         $("#spinner").show();
+        removeTopics();
         $.ajax({
             type: "POST",
             url: "{$site_root_path}pages/wordanalysis.php",
@@ -33,6 +41,7 @@
     
     function topicModelling() {
         $("#spinner").show();
+        removeTopics();
         $.ajax({
             type: "POST",
             url: "{$site_root_path}pages/topics.php",
@@ -78,10 +87,12 @@
         var status_count = user['statuses_count'];
         
         var status;
+        var id;
         for (var i in statuses) {
             date = statuses[i].created.split(" ");
             date = date[1] + ' ' + date[2] + ' ' + date[5];
-            status = '<li class="tweet">' +
+            id = "tweet"+i;
+            status = '<li class="tweet" id="'+id+'">' +
                         '<table>' +
                             '<tr>' +
                                 '<td valign="top">' +
@@ -94,8 +105,8 @@
                                     '</span>' +
                                 '</td>' +
                             '</tr>' +
-                        '</table><hr/>' +
-                     '</li>';
+                        '</table>' +
+                     '</li><br/>';
             $('#timeline').append(status);
         }
         $('#avatar').attr('src', dp);

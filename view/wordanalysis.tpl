@@ -62,13 +62,6 @@
     });
 </script>
 <style type="text/css">
-    #mainstage {
-        margin: 10px auto;
-        width: 750px;
-        height: 80%;
-        float: right;
-        
-    }
     #mainstage span.w10, #mainstage span.w9, #mainstage span.w8, #mainstage span.w7 {
         text-shadow: 0px 1px 1px #ccc;
     }

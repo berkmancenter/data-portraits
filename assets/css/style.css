@@ -81,3 +81,21 @@ body {font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;}
                 50% 50% 
                 no-repeat;
 }
+
+#mainstage {
+    margin: 10px auto;
+    width: 700px;
+    height: 80%;
+    float: right;
+}
+
+.color0{ color:#ffcccc;} .bgcolor0{ background-color:#ffcccc;}
+.color1{ color:#ffd699;} .bgcolor1{ background-color:#ffd699;} 
+.color2{ color:#e9ff99;} .bgcolor2{ background-color:#e9ff99;} 
+.color3{ color:#c3ffb2;} .bgcolor3{ background-color:#c3ffb2;} 
+.color4{ color:#cccccc;} .bgcolor4{ background-color:#cccccc;} 
+.color5{ color:#b2ffff;} .bgcolor5{ background-color:#b2ffff;}
+.color6{ color:#bfd9ff;} .bgcolor6{ background-color:#bfd9ff;}
+.color7{ color:#cdbfff;} .bgcolor7{ background-color:#cdbfff;} 
+.color8{ color:#f4ccff;} .bgcolor8{ background-color:#f4ccff;} 
+.color9{ color:#ffb2e0;} .bgcolor9{ background-color:#ffb2e0;}

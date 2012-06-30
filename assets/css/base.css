@@ -28,17 +28,18 @@ body {height:95%;}
 
 #tweets {
     height: 80%;
-    width: 23%;
+    width: 270px;
     background-color: white;
     overflow-y: scroll;
     float: left;
     margin-top: 30px;
     margin-left: 5px;
-    border: solid 1px #000;
 }
 
 #tweets table {
-    font-size: 10px;
+    width: inherit;
+    text-align: left;
+    font-size: 12px;
     margin-top: -5px;
     margin-bottom: -5px;
     margin-left: -5px;
@@ -51,3 +52,31 @@ div ::-webkit-scrollbar-button:start:decrement,#doc ::-webkit-scrollbar-button:e
 div ::-webkit-scrollbar-track-piece{background-color:#FAFAFA;-webkit-border-radius:0;-webkit-border-bottom-right-radius:8px;-webkit-border-bottom-left-radius:8px;}
 div ::-webkit-scrollbar-thumb:vertical{height:50px;background-color:#E6E6E6;-webkit-border-radius:8px;}
 div ::-webkit-scrollbar-thumb:horizontal{width:50px;background-color:#E6E6E6;-webkit-border-radius:8px;}
+
+#topiccloud .tagCloud {
+    width:97%;
+    text-align:center;
+    padding:5px;
+    overflow:auto;
+    font-size:70%;
+    font-family:arial;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    cursor: pointer;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+#topiccloud .tagList { margin:0; padding:0; }
+#topiccloud .tagList li {
+    list-style-type:none;
+    float:left;
+    margin:0 10px;
+    height:35px;
+    text-decoration:none;
+}
+
+.topic_border {border: solid 1px #000;}
