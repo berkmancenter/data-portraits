@@ -257,7 +257,11 @@ class StatusProcessing {
                     $emoticon_score += $dict->getEmoticonSentiment($emoticon);
                 }
                 $emoticon_avg = $emoticon_score/count($status->emoticons);
-                $score = ($score + 2*$emoticon_avg)/3;
+                if ($score) {
+                    $score = ($score + 2*$emoticon_avg)/3;
+                } else {
+                    $score = $emoticon_avg;
+                }
             }
             array_push($status_sentiment, $score);
         }

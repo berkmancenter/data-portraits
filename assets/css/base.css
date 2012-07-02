@@ -80,3 +80,9 @@ div ::-webkit-scrollbar-thumb:horizontal{width:50px;background-color:#E6E6E6;-we
 }
 
 .topic_border {border: solid 1px #000;}
+.sentiment {height:300px; overflow-y: scroll;}
+.sentiment h3 {margin-top: 0px; padding: 5px 0px; text-align: center;}
+.sentiment div {padding-left: 5px;}
+
+.width100 {width: 100%;}
+.width50 {width: 50%;}
