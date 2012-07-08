@@ -5,8 +5,15 @@
 <script type="text/javascript">
     var json_statuses = null;
     
+    function removeTopics() {
+        for (var i=0; i<10; i++) {
+            $(".tweet").removeClass("bgcolor"+i);
+        }
+    }
+    
     function sentiment() {
         $("#spinner").show();
+        removeTopics();
         $.ajax({
             type: "POST",
             url: "{$site_root_path}pages/sentiment.php",
@@ -20,6 +27,7 @@
     
     function wordAnalysis() {
         $("#spinner").show();
+        removeTopics();
         $.ajax({
             type: "POST",
             url: "{$site_root_path}pages/wordanalysis.php",
@@ -33,6 +41,7 @@
     
     function topicModelling() {
         $("#spinner").show();
+        removeTopics();
         $.ajax({
             type: "POST",
             url: "{$site_root_path}pages/topics.php",
@@ -48,22 +57,33 @@
     });
 </script>
 
-<div class="right">
-    <ul class="mainMenu">
-        <li class="right"><a href="#">Analyse new User</a></li>
-        <li class="right"><a href="#" onclick="sentiment()">Sentiment Analysis</a> - </li>
-        <li class="right"><a href="#" onclick="topicModelling()">Topic Modelling</a> - </li>
-        <li class="right"><a href="#" onclick="wordAnalysis()">Word Analysis</a> - </li>
-    </ul>
-</div>
-
-<div id="tweets">
-    <ul id="timeline"></ul>
-</div>
+<table id="contentTable">
+    <tr>
+        <td rowspan="2" class="width25">
+            <div id="tweets">
+                <ul id="timeline"></ul>
+            </div>
+        </td>
+        <td class="height3 margintopM10">
+            <div class="right">
+                <ul class="mainMenu">
+                    <li class="right"><a href="{$site_root_path}pages/home.php" class="grey-button pcb"><span>Analyse new User</span></a></li>
+                    <li class="right"><a href="#" class="grey-button pcb" onclick="sentiment()"><span>Sentiment Analysis</a></span></li>
+                    <li class="right"><a href="#" class="grey-button pcb" onclick="topicModelling()"><span>Topic Modelling</a></span></li>
+                    <li class="right"><a href="#" class="grey-button pcb" onclick="wordAnalysis()"><span>Word Analysis</a></span></li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+    <tr valign="center">
+        <td class="center">
+            <div id="mainstage" align="center" style="border: 1px solid #000; margin: auto;">
+                {include file="wordanalysis.tpl"}
+            </div>
+        </td>
+    </tr>
+</table>
 <div id="spinner"></div>
-<div id="mainstage">
-    {include file="wordanalysis.tpl"}
-</div>
 
 {literal}
 <script type="text/javascript">
@@ -78,10 +98,12 @@
         var status_count = user['statuses_count'];
         
         var status;
+        var id;
         for (var i in statuses) {
             date = statuses[i].created.split(" ");
             date = date[1] + ' ' + date[2] + ' ' + date[5];
-            status = '<li class="tweet">' +
+            id = "tweet"+i;
+            status = '<li class="tweet" id="'+id+'">' +
                         '<table>' +
                             '<tr>' +
                                 '<td valign="top">' +
@@ -94,8 +116,8 @@
                                     '</span>' +
                                 '</td>' +
                             '</tr>' +
-                        '</table><hr/>' +
-                     '</li>';
+                        '</table>' +
+                     '</li><br/>';
             $('#timeline').append(status);
         }
         $('#avatar').attr('src', dp);

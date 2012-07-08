@@ -35,26 +35,32 @@
         var span;
         var ele;
         var word_list = [];
+        var table_height = $("#contentTable").height();
+        var orig_table_height = 563;
+        var ratio = table_height / orig_table_height;
+        var max_font_size = 45;
         for (var word in words) {
             if (words[word]['total'] < avg) {
                 continue;
             }
             color = Math.floor((words[word]['url']*100)/words[word]['total']);
-            size = Math.floor((words[word]['total']*100)/max);
+            size = Math.floor((words[word]['total']/max)*max_font_size);
+            size = Math.round(size*ratio);
             var item = new Array();
             item['text'] = word;
             item['weight'] = words[word]['total'];
             var html = new Array();
-            if (color <= 10) { html['style']= "color: #68a1ff"; }
-            else if (color <= 20) { html['style']= "color: #4088ff"; }
-            else if (color <= 30) { html['style']= "color: #2477ff"; }
-            else if (color <= 40) { html['style']= "color: #0060ff"; }
-            else if (color <= 50) { html['style']= "color: #0057e6"; }
-            else if (color <= 60) { html['style']= "color: #004ece"; }
-            else if (color <= 70) { html['style']= "color: #0044b5"; }
-            else if (color <= 80) { html['style']= "color: #003996"; }
-            else if (color <= 90) { html['style']= "color: #002c75"; }
+            if (color <= 10) { html['style']= "color: #68a1ff;"; }
+            else if (color <= 20) { html['style']= "color: #4088ff;"; }
+            else if (color <= 30) { html['style']= "color: #2477ff;"; }
+            else if (color <= 40) { html['style']= "color: #0060ff;"; }
+            else if (color <= 50) { html['style']= "color: #0057e6;"; }
+            else if (color <= 60) { html['style']= "color: #004ece;"; }
+            else if (color <= 70) { html['style']= "color: #0044b5;"; }
+            else if (color <= 80) { html['style']= "color: #003996;"; }
+            else if (color <= 90) { html['style']= "color: #002c75;"; }
             else { html['style']= "color: #002562;"; }
+            html['style'] += " font-size: "+size;
             item['html'] = html;
             word_list.push(item);
         }
@@ -62,13 +68,6 @@
     });
 </script>
 <style type="text/css">
-    #mainstage {
-        margin: 10px auto;
-        width: 750px;
-        height: 80%;
-        float: right;
-        
-    }
     #mainstage span.w10, #mainstage span.w9, #mainstage span.w8, #mainstage span.w7 {
         text-shadow: 0px 1px 1px #ccc;
     }
