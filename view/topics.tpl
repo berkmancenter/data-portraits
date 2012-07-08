@@ -53,18 +53,13 @@
 	    for (var i=0; i<num_topics; i++) {
 		active_topics[i] = 0;
 	    }
-	    
-	    console.log(topics);
-	    console.log(topic_text);
-	    console.log(topic_text_values);
-	    console.log(topics_tweets);
 	    console.log(topics_tweets_values);
 	    displayTopics(data.num, data.topic_text, data.topic_text_values, data.tweets);
 	};
     }
     
     function displayTopics(num, topic_text, topic_text_values, tweets) {
-	var table_topics = '<table>';
+	var table_topics = '<table class="height97">';
 	for (k=0; k<num;) {
 	    table_topics += "<tr>";
 	    for (var j=0; j<2; j++) {
@@ -78,8 +73,8 @@
 			table_topics += '<li>'+topic_text[k][i]+"</li>";
 		    } else {
 			var fontsize = (1+(topic_text_values[k][i]-1)/4);
-			if (fontsize > 2.75) {
-			    fontsize = 2.75;
+			if (fontsize > 2) {
+			    fontsize = 2;
 			}
 			fontsize += "em";
 			table_topics += '<li style="font-size: '+fontsize+'">'+topic_text[k][i]+"</li>";
@@ -92,6 +87,19 @@
 	}
 	table_topics += "</table>";
         $("#topiccloud").append(table_topics);
+	var font_size = null;
+	var word_height = null;
+	var orig_table_size = 563;
+	var table_size = $("#contentTable").height();
+	var ratio = table_size/orig_table_size;
+	$(".tagCloud").each(function () {
+	    font_size = Math.round(Math.round(parseFloat($(this).css("font-size")))*ratio);
+	    $(this).css("font-size", font_size);
+	});
+	$(".tagCloud li").each(function () {
+	    var word_height = Math.round(Math.round(parseFloat($(this).height()))*ratio);
+	    $(this).css("height", word_height);
+	});
 	$("#spinner").hide();
     }
     

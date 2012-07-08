@@ -57,22 +57,33 @@
     });
 </script>
 
-<div class="right">
-    <ul class="mainMenu">
-        <li class="right"><a href="#">Analyse new User</a></li>
-        <li class="right"><a href="#" onclick="sentiment()">Sentiment Analysis</a> - </li>
-        <li class="right"><a href="#" onclick="topicModelling()">Topic Modelling</a> - </li>
-        <li class="right"><a href="#" onclick="wordAnalysis()">Word Analysis</a> - </li>
-    </ul>
-</div>
-
-<div id="tweets">
-    <ul id="timeline"></ul>
-</div>
+<table id="contentTable">
+    <tr>
+        <td rowspan="2" class="width25">
+            <div id="tweets">
+                <ul id="timeline"></ul>
+            </div>
+        </td>
+        <td class="height3 margintopM10">
+            <div class="right">
+                <ul class="mainMenu">
+                    <li class="right"><a href="#" class="grey-button pcb"><span>Analyse new User</span></a></li>
+                    <li class="right"><a href="#" class="grey-button pcb" onclick="sentiment()"><span>Sentiment Analysis</a></span></li>
+                    <li class="right"><a href="#" class="grey-button pcb" onclick="topicModelling()"><span>Topic Modelling</a></span></li>
+                    <li class="right"><a href="#" class="grey-button pcb" onclick="wordAnalysis()"><span>Word Analysis</a></span></li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+    <tr valign="center">
+        <td class="center">
+            <div id="mainstage" align="center" style="border: 1px solid #000; margin: auto;">
+                {include file="wordanalysis.tpl"}
+            </div>
+        </td>
+    </tr>
+</table>
 <div id="spinner"></div>
-<div id="mainstage">
-    {include file="wordanalysis.tpl"}
-</div>
 
 {literal}
 <script type="text/javascript">

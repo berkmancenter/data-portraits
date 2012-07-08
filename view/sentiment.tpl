@@ -6,6 +6,11 @@
         // both blue and orange.
         $('#sentimentClock').tzineClock([{$sentiment}, true]);
         $('#posPercentClock').tzineClock([{$pos_percent}, false]);
+        var table_height = $("#contentTable").height();
+        var orig_table_height = 563;
+        var diff = table_height - orig_table_height;
+        var new_height = diff + $(".sentiment").height();
+        $(".sentiment").height(new_height);
     });
 </script>
 <table class="width100">
@@ -39,7 +44,7 @@
             </table>
         </td>
     </tr>
-    <tr>
+    <tr id="highslows">
         <td class="width50">
             <div class="sentiment bgcolor11">
                 <h3 class="bgcolor12">Highs</h3>

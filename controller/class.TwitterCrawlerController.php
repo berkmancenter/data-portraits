@@ -10,7 +10,7 @@ class TwitterCrawlerController extends DPController {
     
     public function go() {
         
-        $_POST['username'] = 'ginatrapani';
+        $_POST['username'] = 'judithd';
         
         if (!isset($_POST['username']) || $_POST['username'] == '') {
             header('Location: '.ROOT_PATH."/pages/home.php");
