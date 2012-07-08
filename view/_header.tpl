@@ -3,13 +3,11 @@
         <title>{$app_title}</title>
         <link rel="stylesheet" type="text/css" href="{$site_root_path}assets/css/style.css" />
         <link rel="stylesheet" type="text/css" href="{$site_root_path}assets/css/base.css" />
-        
+        <link rel="stylesheet" type="text/css" href="{$site_root_path}assets/css/buttons.css" />
+
         <script type="text/javascript" src="{$site_root_path}extlib/jQuery/jquery1.7.2.min.js"></script>
     </head>
 <body>
-    <div id="background">
-        <img src="{$site_root_path}assets/images/bg_big2.jpg" class="stretch" alt="" />
-    </div>
     <div id="main">
         <div id="headerBar">
             <div>
