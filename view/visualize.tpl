@@ -67,7 +67,7 @@
         <td class="height3 margintopM10">
             <div class="right">
                 <ul class="mainMenu">
-                    <li class="right"><a href="#" class="grey-button pcb"><span>Analyse new User</span></a></li>
+                    <li class="right"><a href="{$site_root_path}pages/home.php" class="grey-button pcb"><span>Analyse new User</span></a></li>
                     <li class="right"><a href="#" class="grey-button pcb" onclick="sentiment()"><span>Sentiment Analysis</a></span></li>
                     <li class="right"><a href="#" class="grey-button pcb" onclick="topicModelling()"><span>Topic Modelling</a></span></li>
                     <li class="right"><a href="#" class="grey-button pcb" onclick="wordAnalysis()"><span>Word Analysis</a></span></li>
