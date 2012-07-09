@@ -1,7 +1,12 @@
 {include file="_header.tpl"}
 <script type="text/javascript">{$user_data}</script>
 <script type="text/javascript">{$statuses}</script>
-
+<script type="text/javascript">
+    var words_analysis = new Object;
+    var connection_analysis = new Object;
+    var topic_modelling = new Object;
+    var sentiment_analysis = new Object;
+</script>
 <script type="text/javascript">
     var json_statuses = null;
     
@@ -11,32 +16,57 @@
         }
     }
     
-    function sentiment() {
-        $("#spinner").show();
-        removeTopics();
-        $.ajax({
-            type: "POST",
-            url: "{$site_root_path}pages/sentiment.php",
-            data: "statuses="+json_statuses,
-            success: function(msg){
-                $("#mainstage").html(msg);
-                $("#spinner").hide();
-            }
-        });
-    }
-    
     function wordAnalysis() {
         $("#spinner").show();
         removeTopics();
-        $.ajax({
-            type: "POST",
-            url: "{$site_root_path}pages/wordanalysis.php",
-            data: "statuses="+json_statuses,
-            success: function(msg){
-                $("#mainstage").html(msg);
-                $("#spinner").hide();
-            }
-        });
+        if (typeof words_analysis.words != 'undefined') {
+            $.ajax({
+                type: "POST",
+                url: "{$site_root_path}pages/wordanalysis.php",
+                data: "words="+words_analysis.words+"&max="+words_analysis.max
+                      +"&avg="+words_analysis.avg+"&time_taken="+
+                      words_analysis.time_taken+"&count="+words_analysis.count,
+                success: function(msg){
+                    $("#mainstage").html(msg);
+                    $("#spinner").hide();
+                }
+            });
+        } else {
+            $.ajax({
+                type: "POST",
+                url: "{$site_root_path}pages/wordanalysis.php",
+                data: "statuses="+json_statuses,
+                success: function(msg){
+                    $("#mainstage").html(msg);
+                    $("#spinner").hide();
+                }
+            });
+        }
+    }
+    
+    function connectionAnalysis() {
+        $("#spinner").show();
+        removeTopics();
+        if (typeof connection_analysis.words != 'undefined') {
+            $.ajax({
+                type: "POST",
+                url: "{$site_root_path}pages/connections.php",
+                success: function(msg){
+                    $("#mainstage").html(msg);
+                    $("#spinner").hide();
+                }
+            });
+        } else {
+            $.ajax({
+                type: "POST",
+                url: "{$site_root_path}pages/connections.php",
+                data: "username="+user['username']+"&statuses="+json_statuses,
+                success: function(msg){
+                    $("#mainstage").html(msg);
+                    $("#spinner").hide();
+                }
+            });
+        }
     }
     
     function topicModelling() {
@@ -50,6 +80,39 @@
                 $("#mainstage").html(msg);
             }
         });
+    }
+    
+    function sentiment() {
+        $("#spinner").show();
+        removeTopics();
+        console.log(sentiment_analysis);
+        if (typeof sentiment_analysis.max_vals != 'undefined') {
+            $.ajax({
+                type: "POST",
+                url: "{$site_root_path}pages/sentiment.php",
+                data: "tweet_count="+sentiment_analysis.count+"&sentiment="+
+                      sentiment_analysis.sentiment+"&max_vals="+
+                      sentiment_analysis.max_vals+"&max_tweets="+
+                      sentiment_analysis.max_tweets+"&min_vals="+
+                      sentiment_analysis.min_vals+"&min_tweets="+
+                      sentiment_analysis.min_tweets+"&pos_percent="+
+                      sentiment_analysis.pos_percent,
+                success: function(msg){
+                    $("#mainstage").html(msg);
+                    $("#spinner").hide();
+                }
+            });
+        } else {
+            $.ajax({
+                type: "POST",
+                url: "{$site_root_path}pages/sentiment.php",
+                data: "statuses="+json_statuses,
+                success: function(msg){
+                    $("#mainstage").html(msg);
+                    $("#spinner").hide();
+                }
+            });
+        }
     }
     
     $(document).ready(function() {
@@ -70,6 +133,7 @@
                     <li class="right"><a href="{$site_root_path}pages/home.php" class="grey-button pcb"><span>Analyse new User</span></a></li>
                     <li class="right"><a href="#" class="grey-button pcb" onclick="sentiment()"><span>Sentiment Analysis</a></span></li>
                     <li class="right"><a href="#" class="grey-button pcb" onclick="topicModelling()"><span>Topic Modelling</a></span></li>
+                    <li class="right"><a href="#" class="grey-button pcb" onclick="connectionAnalysis()"><span>Connection Analysis</a></span></li>
                     <li class="right"><a href="#" class="grey-button pcb" onclick="wordAnalysis()"><span>Word Analysis</a></span></li>
                 </ul>
             </div>

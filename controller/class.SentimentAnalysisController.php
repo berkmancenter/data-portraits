@@ -35,15 +35,22 @@ class SentimentAnalysisController extends DPController {
     
     public function go() {
         
-        $statuses = json_decode($_POST['statuses']);
-        $array = self::Crawl($statuses);
-        
+        if (isset($_POST['statuses'])) {
+            $statuses = json_decode($_POST['statuses']);
+            $array = self::Crawl($statuses);
+        } else {
+            $array = self::forwardData();
+        }
         $this->addToView('count', $array['count']);
         $this->addToView('sentiment', $array['sentiment']);
         $this->addToView('min', $array['min']);
+        $this->addToView('min_json', json_encode($array['min']));
         $this->addToView('min_tweets', $array['min_tweets']);
+        $this->addToView('min_tweets_json', json_encode($array['min_tweets']));
         $this->addToView('max', $array['max']);
+        $this->addToView('max_json', json_encode($array['max']));
         $this->addToView('max_tweets', $array['max_tweets']);
+        $this->addToView('max_tweets_json', json_encode($array['max_tweets']));
         $this->addToView('pos_percent', $array['pos_percent']);
         
         $this->setViewTemplate('sentiment.tpl');
@@ -84,6 +91,26 @@ class SentimentAnalysisController extends DPController {
             array_push($max_tweets, $statuses[$max[$tweet_count-$i-1]]->text);
         }
         
+        $array = array (
+            'count' => $tweet_count,
+            'sentiment' => $sentiment,
+            'max' => $max_vals,
+            'max_tweets' => $max_tweets,
+            'min' => $min_vals,
+            'min_tweets' => $min_tweets,
+            'pos_percent' => $pos_percent
+        );
+        return $array;
+    }
+    
+    private static function forwardData() {
+        $tweet_count = $_POST['tweet_count'];
+        $sentiment = $_POST['sentiment'];
+        $max_vals = json_decode($_POST['max_vals']);
+        $max_tweets = json_decode($_POST['max_tweets']);
+        $min_vals = json_decode($_POST['min_vals']);
+        $min_tweets = json_decode($_POST['min_tweets']);
+        $pos_percent = $_POST['pos_percent'];
         $array = array (
             'count' => $tweet_count,
             'sentiment' => $sentiment,

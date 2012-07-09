@@ -34,14 +34,14 @@ require_once(ROOT_PATH."/model/class.StatusProcessing.php");
 class WordAnalysisController extends DPController {
     
     public function go() {
+        if (isset($_POST['statuses'])) {
+            $statuses = json_decode($_POST['statuses']);
+            $array = self::Crawl($statuses);
+        } else {
+            $array = self::forwardData();
+        }
         
-        $statuses = json_decode($_POST['statuses']);
-        $array = self::Crawl($statuses);
-        
-        $words = 'var words = ';
-        $words .= json_encode($array['words']);
-        
-        $this->addToView('words', $words);
+        $this->addToView('words', $array['words']);
         $this->addToView('max', $array['max']);
         $this->addToView('count', $array['count']);
         $this->addToView('avg', $array['avg']);
@@ -57,9 +57,7 @@ class WordAnalysisController extends DPController {
         $time_taken = StatusProcessing::getNumberOfDays(
                       $user_timeline[0], $user_timeline[$count-1]);
         $words = StatusProcessing::findWords($user_timeline, $max, $avg);
-        
-        //$sentiment = StatusProcessing::findSentiment($user_timeline, $count);
-        //echo $sentiment;
+        $words = 'var words = '.json_encode($words);
         
         // Anil Dash
         //$count = 173;
@@ -82,7 +80,22 @@ class WordAnalysisController extends DPController {
             'time_taken' => $time_taken,
             'avg' => $avg
         );
-        
+        return $array;
+    }
+    
+    private static function forwardData() {
+        $words = "var words = ".$_POST['words'];
+        $max = $_POST['max'];
+        $count = $_POST['count'];
+        $time_taken = $_POST['time_taken'];
+        $avg = $_POST['avg'];
+        $array = array (
+            'words' => $words,
+            'max' => $max,
+            'count' => $count,
+            'time_taken' => $time_taken,
+            'avg' => $avg
+        );
         return $array;
     }
 }
