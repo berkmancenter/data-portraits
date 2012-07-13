@@ -57,7 +57,7 @@ class WordAnalysisController extends DPController {
         $time_taken = StatusProcessing::getNumberOfDays(
                       $user_timeline[0], $user_timeline[$count-1]);
         $words = StatusProcessing::findWords($user_timeline, $max, $avg);
-        $words = 'var words = '.json_encode($words);
+        $words = 'var words = '.json_encode($words).";";
         
         // Anil Dash
         //$count = 173;
@@ -84,7 +84,7 @@ class WordAnalysisController extends DPController {
     }
     
     private static function forwardData() {
-        $words = "var words = ".$_POST['words'];
+        $words = "var words = ".stripcslashes($_POST['words']).";";
         $max = $_POST['max'];
         $count = $_POST['count'];
         $time_taken = $_POST['time_taken'];

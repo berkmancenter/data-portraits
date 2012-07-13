@@ -36,7 +36,7 @@ class SentimentAnalysisController extends DPController {
     public function go() {
         
         if (isset($_POST['statuses'])) {
-            $statuses = json_decode($_POST['statuses']);
+            $statuses = json_decode(stripcslashes($_POST['statuses']));
             $array = self::Crawl($statuses);
         } else {
             $array = self::forwardData();
@@ -107,9 +107,9 @@ class SentimentAnalysisController extends DPController {
         $tweet_count = $_POST['tweet_count'];
         $sentiment = $_POST['sentiment'];
         $max_vals = json_decode($_POST['max_vals']);
-        $max_tweets = json_decode($_POST['max_tweets']);
+        $max_tweets = json_decode(stripcslashes($_POST['max_tweets']));
         $min_vals = json_decode($_POST['min_vals']);
-        $min_tweets = json_decode($_POST['min_tweets']);
+        $min_tweets = json_decode(stripcslashes($_POST['min_tweets']));
         $pos_percent = $_POST['pos_percent'];
         $array = array (
             'count' => $tweet_count,

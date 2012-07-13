@@ -141,7 +141,7 @@
     </tr>
     <tr valign="center">
         <td class="center">
-            <div id="mainstage" align="center" style="border: 1px solid #000; margin: auto;">
+            <div id="mainstage" align="center">
                 {include file="wordanalysis.tpl"}
             </div>
         </td>
