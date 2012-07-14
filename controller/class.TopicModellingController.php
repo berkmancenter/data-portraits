@@ -34,7 +34,11 @@ class TopicModellingController extends DPController {
     
     public function go() {
         
-        $statuses = "var statuses = ".stripcslashes($_POST['statuses']).";";
+        if (get_magic_quotes_gpc()) {
+            $statuses = "var statuses = ".stripcslashes($_POST['statuses']).";";
+        } else {
+	    $statuses = "var statuses = ".$_POST['statuses'].";";
+        }
         
         $this->addToView('statuses', $statuses);
         $this->setViewTemplate('topics.tpl');

@@ -84,7 +84,11 @@ class WordAnalysisController extends DPController {
     }
     
     private static function forwardData() {
-        $words = "var words = ".stripcslashes($_POST['words']).";";
+        if (get_magic_quotes_gpc()) {
+            $words = "var words = ".stripcslashes($_POST['words']).";";
+        } else {
+            $words = "var words = ".$_POST['words'].";";
+        }
         $max = $_POST['max'];
         $count = $_POST['count'];
         $time_taken = $_POST['time_taken'];
