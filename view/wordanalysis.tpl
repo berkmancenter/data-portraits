@@ -28,8 +28,15 @@
     $(document).ready(function() {
         var max = {$max};
         var avg = {$avg};
+        var time_taken = {$time_taken};
+        var count = {$count};
         var size;
     {literal}
+        words_analysis.words = JSON.stringify(words);
+        words_analysis.max = max;
+        words_analysis.avg = avg;
+        words_analysis.time_taken = time_taken;
+        words_analysis.count = count;
         var text;
         var color;
         var span;

@@ -1,8 +1,8 @@
 <?php
 /**
  *
- * Data-Portraits/controller/class.TopicModellingController.php
- * Class for creating the Topic Modelling page
+ * Data-Portraits/setup/controller/class.SentimentDictionaryConstructorController.php
+ * Controller for constructing the Sentiment Dictionary.
  *
  * Copyright (c) 2012 Berkman Center for Internet and Society, Harvard Univesity
  *
@@ -28,21 +28,12 @@
  * @copyright 2012 Berkman Center for Internet and Society, Harvard University
  * 
  */
-require_once(ROOT_PATH."/controller/class.DPController.php");
+require_once(ROOT_PATH."/setup/sentimentdictionary/model/class.SentimentDictionaryConstructor.php");
 
-class TopicModellingController extends DPController {
+class SentimentDictionaryConstructorController {
     
     public function go() {
-        
-        if (get_magic_quotes_gpc()) {
-            $statuses = "var statuses = ".stripcslashes($_POST['statuses']).";";
-        } else {
-	    $statuses = "var statuses = ".$_POST['statuses'].";";
-        }
-        
-        $this->addToView('statuses', $statuses);
-        $this->setViewTemplate('topics.tpl');
-        return $this->generateView();
+        $dict = new SentimentDictionaryConstructor();
+        $dict->createDictionary();
     }
-    
 }

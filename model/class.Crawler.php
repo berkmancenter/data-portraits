@@ -223,6 +223,17 @@ class Crawler {
     }
     
     /**
+     * Return up to 100 users worth of extended information, specified by
+     * either ID, screen name, or combination of the two.
+     * Mandatory index $vals['screen_name'] or $vals['user_id']
+     * @param $vals array
+     */
+    public function multipleUsersDetails($vals) {
+        $content = $this->connection->post('users/lookup', $vals);
+        return $content;
+    }
+    
+    /**
      * Returns extended information of a given user
      * Mandatory index $vals['screen_name'] or $vals['user_id']
      * @param $vals array

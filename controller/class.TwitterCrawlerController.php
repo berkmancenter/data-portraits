@@ -39,8 +39,6 @@ class TwitterCrawlerController extends DPController {
     
     public function go() {
         
-        $_POST['username'] = 'judithd';
-        
         if (!isset($_POST['username']) || $_POST['username'] == '') {
             header('Location: '.ROOT_PATH."/pages/home.php");
         }
@@ -57,7 +55,7 @@ class TwitterCrawlerController extends DPController {
         $this->addToView('statuses', $statuses);
         
         $words = 'var words = ';
-        $words .= json_encode($array['words']);
+        $words .= json_encode($array['words']).";";
         
         $this->addToView('words', $words);
         $this->addToView('max', $array['max']);
