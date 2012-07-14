@@ -1,6 +1,13 @@
 <script type="text/javascript" src="{$site_root_path}extlib/tzineClock_modified/jquery.tzineClock.js"></script>
 <link rel="stylesheet" type="text/css" href="{$site_root_path}extlib/tzineClock_modified/jquery.tzineClock.css" />
 <script type="text/javascript">
+    sentiment_analysis.count = {$count};
+    sentiment_analysis.sentiment = {$sentiment};
+    sentiment_analysis.max_vals = JSON.stringify({$max_json});
+    sentiment_analysis.max_tweets = JSON.stringify({$max_tweets_json});
+    sentiment_analysis.min_vals = JSON.stringify({$min_json});
+    sentiment_analysis.min_tweets = JSON.stringify({$min_tweets_json});
+    sentiment_analysis.pos_percent = {$pos_percent};
     $(document).ready(function() {
         // Second parameter is multiple colors, if false we use only green. Else we use
         // both blue and orange.

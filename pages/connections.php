@@ -1,8 +1,8 @@
 <?php
 /**
  *
- * Data-Portraits/controller/class.TopicModellingController.php
- * Class for creating the Topic Modelling page
+ * Data-Portraits/pages/connections.php
+ * Page for calling Connections Controller
  *
  * Copyright (c) 2012 Berkman Center for Internet and Society, Harvard Univesity
  *
@@ -28,21 +28,9 @@
  * @copyright 2012 Berkman Center for Internet and Society, Harvard University
  * 
  */
-require_once(ROOT_PATH."/controller/class.DPController.php");
+chdir("..");
+require_once("init.php");
+require_once(ROOT_PATH."/controller/class.ConnectionsController.php");
 
-class TopicModellingController extends DPController {
-    
-    public function go() {
-        
-        if (get_magic_quotes_gpc()) {
-            $statuses = "var statuses = ".stripcslashes($_POST['statuses']).";";
-        } else {
-	    $statuses = "var statuses = ".$_POST['statuses'].";";
-        }
-        
-        $this->addToView('statuses', $statuses);
-        $this->setViewTemplate('topics.tpl');
-        return $this->generateView();
-    }
-    
-}
+$controller = new ConnectionsController();
+echo $controller->go();

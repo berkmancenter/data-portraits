@@ -50,9 +50,15 @@
 	    topic_text_values = data.topic_text_values;
 	    topics_tweets = data.topics_tweets;
 	    topics_tweets_values = data.topics_tweets_values;
-	    for (var i=0; i<num_topics; i++) {
-		active_topics[i] = 0;
-	    }
+	    
+	    topic_modelling.topics = topics;
+	    topic_modelling.topic_text = topic_text;
+	    topic_modelling.topic_text_values = topic_text_values;
+	    topic_modelling.topics_tweets = topics_tweets;
+	    topic_modelling.topics_tweets_values = topics_tweets_values;
+	    topic_modelling.num_topics = num_topics;
+	    console.log(topic_modelling);
+	    
 	    console.log(topics_tweets_values);
 	    displayTopics(data.num, data.topic_text, data.topic_text_values, data.tweets);
 	};
@@ -66,7 +72,7 @@
 		var shuffled = shuffle(topic_text[k], topic_text_values[k]);
 		topic_text[k] = shuffled[0];
 		topic_text_values[k] = shuffled[1];
-		table_topics += "<td>";
+		table_topics += '<td class="width50">';
 		table_topics += '<div id="topic'+k+'" class="tagCloud bgcolor'+k+'" onclick="color('+k+')"><ul class="tagList">';
 		for (var i in topic_text[k]) {
 		    if (topic_text_values[k][i] == 1) {
@@ -104,7 +110,21 @@
     }
     
     $(document).ready(function() {
-        performTopicModelling();
+	for (var i=0; i<num_topics; i++) {
+	    active_topics[i] = 0;
+	}
+	if (typeof topic_modelling.topics != 'undefined') {
+	    num_topics = topic_modelling.num_topics;
+	    topics = topic_modelling.topics;
+	    topic_text = topic_modelling.topic_text;
+	    topic_text_values = topic_modelling.topic_text_values;
+	    topics_tweets = topic_modelling.topics_tweets;
+	    topics_tweets_values = topic_modelling.topics_tweets_values;
+	    displayTopics(topic_modelling.num_topics, topic_modelling.topic_text,
+			  topic_modelling.topic_text_values, topic_modelling.tweets);
+	} else {
+	    performTopicModelling();
+	}
     });
 </script>
 <div id="topiccloud"></div>
