@@ -51,13 +51,17 @@ class WordAnalysisController extends DPController {
         return $this->generateView();
     }
     
-    private static function crawl($user_timeline) {
+    public static function crawl($user_timeline) {
         
         $count = StatusProcessing::getNumberOfStatuses($user_timeline);
         $time_taken = StatusProcessing::getNumberOfDays(
                       $user_timeline[0], $user_timeline[$count-1]);
-        $words = StatusProcessing::findWords($user_timeline, $max, $avg);
+        $words = StatusProcessing::findWords($user_timeline);
+        $stats = self::findMaxAndAvg($words);
+        
         $words = 'var words = '.json_encode($words).";";
+        $max= $stats['max'];
+        $avg = $stats['avg'];
         
         // Anil Dash
         //$count = 173;
@@ -98,6 +102,25 @@ class WordAnalysisController extends DPController {
             'max' => $max,
             'count' => $count,
             'time_taken' => $time_taken,
+            'avg' => $avg
+        );
+        return $array;
+    }
+    
+    private function findMaxAndAvg($words) {
+        $max = 0;
+        $number_of_instances = 0;
+        $number_of_words = 0;
+        foreach($words as $word) {
+            $number_of_words++;
+            $number_of_instances += $word['total'];
+            if ($word['total'] > $max) {
+                $max = $word['total'];
+            }
+        }
+        $avg = $number_of_instances / $number_of_words;
+        $array = array(
+            'max' => $max,
             'avg' => $avg
         );
         return $array;

@@ -97,9 +97,8 @@ class StatusProcessing {
         return $urls;
     }
     
-    public static function findWords($statuses, &$maximum, &$avg) {
+    public static function findWords($statuses) {
         $words_list = array();
-        $maximum = 0;
         $count_instances = 0;
         $count_distinct_words = 0;
         $stop_words = Utils::getStopWords();
@@ -124,9 +123,6 @@ class StatusProcessing {
                         if ($status->urls) {
                             $words_list[$word]['url']++;
                         }
-                        if ($words_list[$word]['total'] > $maximum) {
-                            $maximum = $words_list[$word]['total'];
-                        }
                     } else {
                         $count_distinct_words++;
                         $count_instances++;
@@ -134,9 +130,6 @@ class StatusProcessing {
                         $words_list[$word]['url'] = 0;
                         if ($status->urls) {
                             $words_list[$word]['url']++;
-                        }
-                        if ($words_list[$word]['total'] > $maximum) {
-                            $maximum = $words_list[$word]['total'];
                         }
                     }
                 }
@@ -232,10 +225,9 @@ class StatusProcessing {
             }
             $status_no++;
         }
-        $avg = $count_instances / $count_distinct_words;
         unset($stop_words);
         
-        $bigrams_final_list = self::processBigrams($statuses, $bigrams_list, $words_list, $maximum);
+        $bigrams_final_list = self::processBigrams($statuses, $bigrams_list, $words_list);
         unset($bigrams_list);
         
         $trigrams_final_list = self::processTrigrams($statuses, $trigrams_list, $bigrams_final_list);
@@ -329,7 +321,7 @@ class StatusProcessing {
         return $date[2]."-".$month."-".$date[5];
     }
     
-    private static function processBigrams($statuses, $bigrams_list, &$words_list, &$maximum) {
+    private static function processBigrams($statuses, $bigrams_list, &$words_list) {
         $bigrams_final_list = array();
         // bigram processing step 2
         foreach ($bigrams_list as $bigram=>$b_vals) {
@@ -373,13 +365,6 @@ class StatusProcessing {
             $words = explode(" ", $bigram);
             $unigram1 = $words[0];
             $unigram2 = $words[1];
-            if (isset($words_list[$unigram1])
-                && $maximum == $words_list[$unigram1]['total'] ) {
-                $maximum -= $vals['total'];
-            } elseif (isset($words_list[$unigram2])
-                      && $maximum == $words_list[$unigram2]['total']) {
-                $maximum -= $vals['total'];
-            }
             if (isset($words_list[$unigram1])) {
                 $words_list[$unigram1]['total'] -= $vals['total'];
                 $words_list[$unigram1]['url'] -= $vals['url'];
