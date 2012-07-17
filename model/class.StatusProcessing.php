@@ -41,9 +41,14 @@ class StatusProcessing {
         $timeline = $connection->userTimeline($vals);
         $statuses = array();
         $i=0;
+        $prev_status = null;
         foreach ($timeline as $tweet) {
+            if (isset($prev_status->text) && !strcmp($prev_status->text, $tweet->text)) {
+                continue;
+            }
             $i++;
             $status = new Status($tweet);
+            $prev_status = $status;
             array_push($statuses, $status);
         }
         return $statuses;
