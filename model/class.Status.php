@@ -127,10 +127,8 @@ class Status {
             $this->hashtags = self::processHashTags($val, $this->text_processed);
             $this->mentions = self::processUserMentions($val, $this->text_processed);
             $this->urls = self::processURLs($val, $this->text_processed);
-            
             $this->text_processed = self::removeHTMLEntities($this->text_processed);
             $this->text = self::removeHTMLEntities($this->text);
-            
             $this->emoticons = self::processEmoticons($this->text_processed);
             $this->text_processed = strtolower(Utils::preprocessTweet($this->text_processed));
         }
@@ -175,19 +173,22 @@ class Status {
     }
     
     private static function processURLs($tweet, &$text_processed) {
-        if (!count($tweet->entities->urls)) {
-            return false;
-        }
         $urls = array();
-        foreach ($tweet->entities->urls as $entity) {
-            array_push($urls, self::removeAmpersand($entity->expanded_url));
-            // Process the tweet by removing the mention
-            $length = $entity->indices[1]-$entity->indices[0];
-            $empty_string = null;
-            for ($i=0; $i<$length; $i++) $empty_string .= " ";
-            $text_processed = substr_replace($text_processed,
-                                        $empty_string,
-                                        $entity->indices[0],$length);
+        if (count($tweet->entities->urls)) {
+            foreach ($tweet->entities->urls as $entity) {
+                array_push($urls, self::removeAmpersand($entity->expanded_url));
+                // Process the tweet by removing the mention
+                $length = $entity->indices[1]-$entity->indices[0];
+                $empty_string = null;
+                for ($i=0; $i<$length; $i++) $empty_string .= " ";
+                $text_processed = substr_replace($text_processed,
+                                            $empty_string,
+                                            $entity->indices[0],$length);
+            }
+        }
+        $text_processed = self::detectRemainingURLs($text_processed, $urls);
+        if (count($urls) == 0) {
+            return false;
         }
         return $urls;
     }
@@ -234,5 +235,19 @@ class Status {
     private static function removeAmpersand($text) {
         $text = str_replace('&amp;', '&', $text);
         return str_replace('&', '[AND]', $text);
+    }
+    
+    private static function detectRemainingURLs($text, &$urls) {
+        $words = explode(" ", $text);
+        $new_text = "";
+        $reg_exUrl = "/^(http|https|ftp|ftps|www)/";
+        foreach ($words as $word) {
+            if(preg_match($reg_exUrl, $word)) {
+                array_push($urls, $word);
+                continue;
+            }
+            $new_text .= $word." ";
+        }
+        return $new_text;
     }
 }
