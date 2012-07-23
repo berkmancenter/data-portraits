@@ -54,6 +54,18 @@ class StatusProcessing {
         return $statuses;
     }
     
+    public static function getRetweetsByUser($connection, $vals) {
+        $vals['count'] = 100;
+        $vals['include_entities'] = true;
+        $retweets = array();
+        $statuses = $connection->retweetsByUser($vals);
+        foreach ($statuses as $status) {
+            $retweet = new Status($status);
+            array_push($retweets, $retweet);
+        }
+        return $retweets;
+    }
+    
     public static function findHashTags($statuses) {
         $hashtags = array();
         foreach ($statuses as $status) {

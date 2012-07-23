@@ -47,7 +47,7 @@
     function connectionAnalysis() {
         $("#spinner").show();
         removeTopics();
-        if (typeof connection_analysis.words != 'undefined') {
+        if (typeof connection_analysis.data != 'undefined') {
             $.ajax({
                 type: "POST",
                 url: "{$site_root_path}pages/connections.php",

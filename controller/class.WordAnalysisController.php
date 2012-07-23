@@ -30,15 +30,35 @@
  */
 require_once(ROOT_PATH."/controller/class.DPController.php");
 require_once(ROOT_PATH."/model/class.StatusProcessing.php");
+require_once(ROOT_PATH."/model/class.Crawler.php");
 
 class WordAnalysisController extends DPController {
     
     public function go() {
-        if (isset($_POST['statuses'])) {
-            $statuses = json_decode($_POST['statuses']);
-            $array = self::Crawl($statuses);
+        
+        if (isset($_POST["type"]) && $_POST["type"]=="connection") {
+            if (isset($_POST["statuses"])) {
+                
+            } else {
+                $authentication = array(
+                    'token' => $_SESSION['oauth_token'],
+                    'token_secret' => $_SESSION['oauth_secret']
+                );
+                
+                $vals = array(
+                    'screen_name' => $_POST["username"]
+                );
+                $connection = new Crawler($authentication);
+                $statuses = StatusProcessing::getUserTimeline($connection, $vals);
+                $array = self::crawl($statuses);
+            }
         } else {
-            $array = self::forwardData();
+            if (isset($_POST['statuses'])) {
+                $statuses = json_decode($_POST['statuses']);
+                $array = self::Crawl($statuses);
+            } else {
+                $array = self::forwardData();
+            }
         }
         
         $this->addToView('words', $array['words']);
@@ -47,7 +67,11 @@ class WordAnalysisController extends DPController {
         $this->addToView('avg', $array['avg']);
         $this->addToView('time_taken', $array['time_taken']);
         
-        $this->setViewTemplate('wordanalysis.tpl');
+        if (isset($_POST['type']) && $_POST['type'] == "connection") {
+            $this->setViewTemplate('wordanalysis_secondary.tpl');
+        } else {
+            $this->setViewTemplate('wordanalysis.tpl');
+        }
         return $this->generateView();
     }
     
