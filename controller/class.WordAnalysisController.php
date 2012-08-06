@@ -30,15 +30,35 @@
  */
 require_once(ROOT_PATH."/controller/class.DPController.php");
 require_once(ROOT_PATH."/model/class.StatusProcessing.php");
+require_once(ROOT_PATH."/model/class.Crawler.php");
 
 class WordAnalysisController extends DPController {
     
     public function go() {
-        if (isset($_POST['statuses'])) {
-            $statuses = json_decode($_POST['statuses']);
-            $array = self::Crawl($statuses);
+        
+        if (isset($_POST["type"]) && $_POST["type"]=="connection") {
+            if (isset($_POST["statuses"])) {
+                
+            } else {
+                $authentication = array(
+                    'token' => $_SESSION['oauth_token'],
+                    'token_secret' => $_SESSION['oauth_secret']
+                );
+                
+                $vals = array(
+                    'screen_name' => $_POST["username"]
+                );
+                $connection = new Crawler($authentication);
+                $statuses = StatusProcessing::getUserTimeline($connection, $vals);
+                $array = self::crawl($statuses);
+            }
         } else {
-            $array = self::forwardData();
+            if (isset($_POST['statuses'])) {
+                $statuses = json_decode($_POST['statuses']);
+                $array = self::Crawl($statuses);
+            } else {
+                $array = self::forwardData();
+            }
         }
         
         $this->addToView('words', $array['words']);
@@ -47,17 +67,25 @@ class WordAnalysisController extends DPController {
         $this->addToView('avg', $array['avg']);
         $this->addToView('time_taken', $array['time_taken']);
         
-        $this->setViewTemplate('wordanalysis.tpl');
+        if (isset($_POST['type']) && $_POST['type'] == "connection") {
+            $this->setViewTemplate('wordanalysis_secondary.tpl');
+        } else {
+            $this->setViewTemplate('wordanalysis.tpl');
+        }
         return $this->generateView();
     }
     
-    private static function crawl($user_timeline) {
+    public static function crawl($user_timeline) {
         
         $count = StatusProcessing::getNumberOfStatuses($user_timeline);
         $time_taken = StatusProcessing::getNumberOfDays(
                       $user_timeline[0], $user_timeline[$count-1]);
-        $words = StatusProcessing::findWords($user_timeline, $max, $avg);
+        $words = StatusProcessing::findWords($user_timeline);
+        $stats = self::findMaxAndAvg($words);
+        
         $words = 'var words = '.json_encode($words).";";
+        $max= $stats['max'];
+        $avg = $stats['avg'];
         
         // Anil Dash
         //$count = 173;
@@ -98,6 +126,25 @@ class WordAnalysisController extends DPController {
             'max' => $max,
             'count' => $count,
             'time_taken' => $time_taken,
+            'avg' => $avg
+        );
+        return $array;
+    }
+    
+    private function findMaxAndAvg($words) {
+        $max = 0;
+        $number_of_instances = 0;
+        $number_of_words = 0;
+        foreach($words as $word) {
+            $number_of_words++;
+            $number_of_instances += $word['total'];
+            if ($word['total'] > $max) {
+                $max = $word['total'];
+            }
+        }
+        $avg = $number_of_instances / $number_of_words;
+        $array = array(
+            'max' => $max,
             'avg' => $avg
         );
         return $array;

@@ -46,6 +46,16 @@ class Crawler {
                                              $oauth['token_secret']);
     }
     
+    // SEARCH
+    public function search($search_string) {
+        $vals['q'] = $search_string;
+        $vals['include_entities'] = true;
+        $vals['lang'] = "en";
+        $vals['rpp'] = 100;
+        $content = $this->connection->get("search", $vals);
+        return $content;
+    }
+    
     // TIMELINES
       
     /**

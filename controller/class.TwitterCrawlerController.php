@@ -34,6 +34,7 @@ require_once(ROOT_PATH."/model/class.UserDetailsTable.php");
 require_once(ROOT_PATH."/model/class.UserProcessing.php");
 require_once(ROOT_PATH."/model/class.StatusProcessing.php");
 require_once(ROOT_PATH."/controller/class.DPController.php");
+require_once(ROOT_PATH."/controller/class.WordAnalysisController.php");
 
 class TwitterCrawlerController extends DPController {
     
@@ -45,19 +46,9 @@ class TwitterCrawlerController extends DPController {
         
         $array = self::newCrawl($_POST['username']);
         
-        $user = $array['user'];
-        $user_data = 'var user = ';
-        $user_data .= json_encode($user);
-        
-        $statuses = 'var statuses = ';
-        $statuses .= json_encode($array['user_timeline']);
-        $this->addToView('user_data', $user_data);
-        $this->addToView('statuses', $statuses);
-        
-        $words = 'var words = ';
-        $words .= json_encode($array['words']).";";
-        
-        $this->addToView('words', $words);
+        $this->addToView('user_data', $array['user']);
+        $this->addToView('statuses', $array['user_timeline']);
+        $this->addToView('words', $array['words']);
         $this->addToView('max', $array['max']);
         $this->addToView('count', $array['count']);
         $this->addToView('avg', $array['avg']);
@@ -84,22 +75,21 @@ class TwitterCrawlerController extends DPController {
             // It should be an object, hence error
             self::identifyError($user['e_code']);
         } else {
+            $user_json = "var user = ".json_encode($user).";";
             $user_timeline = StatusProcessing::getUserTimeline($connection, $vals);
+            $user_timeline_json = "var statuses = ".json_encode($user_timeline).";";
             //$user_timeline = 0;
             
-            $count = StatusProcessing::getNumberOfStatuses($user_timeline);
-            $time_taken = StatusProcessing::getNumberOfDays(
-                          $user_timeline[0], $user_timeline[$count-1]);
-            $words = StatusProcessing::findWords($user_timeline, $max, $avg);
+            $words_data = WordAnalysisController::crawl($user_timeline);
             
             $array = array(
-                'user' => $user,
-                'user_timeline' => $user_timeline,
-                'words' => $words,
-                'max' => $max,
-                'count' => $count,
-                'time_taken' => $time_taken,
-                'avg' => $avg
+                'user' => $user_json,
+                'user_timeline' => $user_timeline_json,
+                'words' => $words_data['words'],
+                'max' => $words_data['max'],
+                'count' => $words_data['count'],
+                'time_taken' => $words_data['time_taken'],
+                'avg' => $words_data['avg']
             );
             return $array;
         }

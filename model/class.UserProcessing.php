@@ -29,7 +29,6 @@
  * 
  */
 require_once(ROOT_PATH."/model/class.User.php");
-require_once(ROOT_PATH."/model/class.StatusProcessing.php");
 
 class UserProcessing {
     
@@ -44,15 +43,10 @@ class UserProcessing {
         return $user;
     }
     
-    private static function getUsersDetails($connection, $data, $type="ids") {
+    public static function getUsersDetails($connection, $data, $type="ids") {
         $array = array();
         $chunks = array_chunk($data, 100);
-        $i=0;
         foreach ($chunks as $chunk) {
-            // Only allow maximum of 200 users
-            if ($i>=2) {
-                break;
-            }
             if ($type == "ids") {
                 $ids = implode(",",$chunk);
                 $vals = array(
@@ -69,158 +63,12 @@ class UserProcessing {
                 $user = new User($user_detail);
                 array_push($array, $user);
             }
-            $i++;
         }
         return $array;
     }
     
-    public static function getConnections($connection, $vals, $statuses) {
-        $friends_data = self::getAllFriends($connection, $vals);
-        $followers_data = self::getAllFollowers($connection, $vals);
-        $mutual_array = self::getAllMutuals($friends_data['assoc'], $followers_data['assoc']);
-        $friends_array = $friends_data['normal'];
-        $followers_array = $followers_data['normal'];
-        $count_friends = count($friends_array);
-        $count_followers = count($followers_array);
-        unset($friends_data);
-        unset($followers_data);
-        unset($vals);
-        
-        $mutual_people = self::getUsersDetails($connection, $mutual_array);
-        unset($mutual_array);
-        
-        // Select 200 friends - mentions plus remaining random friends
-        $total = $count_friends>200?200:$count_friends;
-        $mentions = StatusProcessing::findMentions($statuses);
-        arsort($mentions);
-        $mentions_array = array();
-        foreach($mentions as $mention=>$count) {
-            array_push($mentions_array, $mention);
-        }
-        $count_mentions = count($mentions_array);
-        $friends_people = self::getUsersDetails($connection, $mentions_array, "screen_names");
-        unset($mentions_array);
-        unset($statuses);
-        unset($mentions);
-
-        $mentions_ids = array();
-        foreach ($friends_people as $mention) {
-            array_push($mentions_ids, $mention->id);
-        }
-        $base = rand(0, $count_friends>getrandmax()?getrandmax():$count_friends);
-        $add = rand(1, 200);
-        $remaining = $total - $count_mentions;
-        $i = 0;
-        $friends_ids = array();
-        while ($i<$remaining) {
-            $i++;
-            $base = $base%$count_friends;
-            while (in_array($friends_array[$base],$friends_ids) || in_array($friends_array[$base],$mentions_ids)) {
-                $base++;
-            }
-            array_push($friends_ids,$friends_array[$base]);
-            $base += $add;
-        }
-        unset($friends_array);
-        unset($mentions_ids);
-        $friends_temp_people = self::getUsersDetails($connection, $friends_ids);
-        foreach ($friends_temp_people as $friend) {
-            array_push($friends_people, $friend);
-        }
-        unset($friends_temp_people);
-        
-        // Select 200 random followers
-        $base = rand(0, $count_followers>getrandmax()?getrandmax():$count_followers);
-        $add = rand(1, 200);
-        $i = 0;
-        $total = $count_followers>200?200:$count_followers;
-        $followers_ids = array();
-        while ($i < $total) {
-            $i++;
-            $base %= $count_followers;
-            while (in_array($followers_array[$base],$followers_ids)) {
-                $base++;
-            }
-            array_push($followers_ids,$followers_array[$base]);
-            $base += $add;
-        }
-        unset($followers_array);
-        $followers_people = self::getUsersDetails($connection, $followers_ids);
-        unset($followers_ids);
-        
-        
-        $people = array(
-            'friends' => $friends_people,
-            'followers' => $followers_people,
-            'mutuals' => $mutual_people
-        );
-        return $people;
+    public static function getRetweetersOfStatus($connection, $id) {
+        $users = $connection->statusRetweetedBy($id);
+        print_r($users);
     }
-    
-    private static function getAllMutuals($friends, $followers) {
-        $mutual_array = array();
-        foreach ($friends as $id=>$key) {
-            if (isset($followers[$id])) {
-                array_push($mutual_array, $id);
-            }
-        }
-        return $mutual_array;
-    }
-    
-    private static function getAllFollowers($connection, $vals) {
-        $vals['cursor'] = -1;
-        $followers_array_assoc = array();
-        $followers_array_normal = array();
-        $i = 0;
-        while (1) {
-            if ($i >= 11) {
-                break;
-            }
-            $followers = $connection->getFollowers($vals);
-            foreach ($followers->ids as $id) {
-                $followers_array_assoc[$id] = true;
-                array_push($followers_array_normal, $id);
-            }
-            if ($followers->next_cursor_str == 0) {
-                break;
-            } else {
-                $vals['cursor'] = $followers->next_cursor_str;
-            }
-            $i++;
-        }
-        $followers_array = array(
-            'assoc' => $followers_array_assoc,
-            'normal' => $followers_array_normal
-        );
-        return $followers_array;
-    }
-    
-    private static function getAllFriends($connection, $vals) {
-        $vals['cursor'] = -1;
-        $friends_array_assoc = array();
-        $friends_array_normal = array();
-        $i = 0;
-        while (1) {
-            if ($i >= 11) {
-                break;
-            }
-            $friends = $connection->getFriends($vals);
-            foreach ($friends->ids as $id) {
-                $friends_array_assoc[$id] = true;
-                array_push($friends_array_normal, $id);
-            }
-            if ($friends->next_cursor_str == 0) {
-                break;
-            } else {
-                $vals['cursor'] = $friends->next_cursor_str;
-            }
-            $i++;
-        }
-        $friends_array = array(
-            'assoc' => $friends_array_assoc,
-            'normal' => $friends_array_normal
-        );
-        return $friends_array;
-    }
-    
 }

@@ -106,6 +106,11 @@ class Status {
      * @var array
      */
     var $emoticons;
+    /**
+     *
+     * @var object
+     */
+    var $retweet_of;
     
     /**
      * Constructor
@@ -116,23 +121,31 @@ class Status {
         if($val) {
             $this->id = $val->id_str;
             $this->created = $val->created_at;
-            $this->text = $val->text;
-            $this->text_processed = $val->text;
-            $this->in_reply_to_status = $val->in_reply_to_status_id_str;
-            $this->in_reply_to_user = $val->in_reply_to_screen_name;
-            $this->coordinates = $val->coordinates;
-            $this->place = $val->place;
-            $this->retweet_count = $val->retweet_count;
-            $this->created_by = $val->user->screen_name;
+            $this->text = self::removeHTMLEntities($val->text);
+            $this->text_processed = self::removeHTMLEntities($val->text);
+            
+            $this->in_reply_to_status = isset($val->in_reply_to_status_id_str)?$val->in_reply_to_status_id_str:null;
+            $this->in_reply_to_user = isset($val->in_reply_to_screen_name)?$val->in_reply_to_screen_name:null;
+            $this->coordinates = isset($val->coordinates)?$val->coordinates:null;
+            $this->place = isset($val->place)?$val->place:null;
+            $this->retweet_count = isset($val->retweet_count)?$val->retweet_count:null;
+            if (isset($val->user->screen_name) || isset($val->from_user)) {
+                if (isset($val->user->screen_name)) {
+                    $this->created_by = $val->user->screen_name;
+                } else {
+                    $this->created_by = $val->from_user;
+                }
+            }
             $this->hashtags = self::processHashTags($val, $this->text_processed);
             $this->mentions = self::processUserMentions($val, $this->text_processed);
             $this->urls = self::processURLs($val, $this->text_processed);
-            
-            $this->text_processed = self::removeHTMLEntities($this->text_processed);
-            $this->text = self::removeHTMLEntities($this->text);
-            
             $this->emoticons = self::processEmoticons($this->text_processed);
             $this->text_processed = strtolower(Utils::preprocessTweet($this->text_processed));
+            if (isset($val->retweeted_status)) {
+                $this->retweet_of = new self($val->retweeted_status);
+            } else {
+                $this->retweet_of = null;
+            }
         }
     }
     
@@ -175,19 +188,22 @@ class Status {
     }
     
     private static function processURLs($tweet, &$text_processed) {
-        if (!count($tweet->entities->urls)) {
-            return false;
-        }
         $urls = array();
-        foreach ($tweet->entities->urls as $entity) {
-            array_push($urls, self::removeAmpersand($entity->expanded_url));
-            // Process the tweet by removing the mention
-            $length = $entity->indices[1]-$entity->indices[0];
-            $empty_string = null;
-            for ($i=0; $i<$length; $i++) $empty_string .= " ";
-            $text_processed = substr_replace($text_processed,
-                                        $empty_string,
-                                        $entity->indices[0],$length);
+        if (count($tweet->entities->urls)) {
+            foreach ($tweet->entities->urls as $entity) {
+                array_push($urls, self::removeAmpersand($entity->expanded_url));
+                // Process the tweet by removing the mention
+                $length = $entity->indices[1]-$entity->indices[0];
+                $empty_string = null;
+                for ($i=0; $i<$length; $i++) $empty_string .= " ";
+                $text_processed = substr_replace($text_processed,
+                                            $empty_string,
+                                            $entity->indices[0],$length);
+            }
+        }
+        $text_processed = self::detectRemainingURLs($text_processed, $urls);
+        if (count($urls) == 0) {
+            return false;
         }
         return $urls;
     }
@@ -234,5 +250,19 @@ class Status {
     private static function removeAmpersand($text) {
         $text = str_replace('&amp;', '&', $text);
         return str_replace('&', '[AND]', $text);
+    }
+    
+    private static function detectRemainingURLs($text, &$urls) {
+        $words = explode(" ", $text);
+        $new_text = "";
+        $reg_exUrl = "/^(http|https|ftp|ftps|www)/";
+        foreach ($words as $word) {
+            if(preg_match($reg_exUrl, $word)) {
+                array_push($urls, $word);
+                continue;
+            }
+            $new_text .= $word." ";
+        }
+        return $new_text;
     }
 }
