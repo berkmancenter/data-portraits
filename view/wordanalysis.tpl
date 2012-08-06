@@ -52,6 +52,7 @@
             }
             color = Math.floor((words[word]['url']*100)/words[word]['total']);
             size = Math.floor((words[word]['total']/max)*max_font_size);
+            size = size<12?12:size;
             size = Math.round(size*ratio);
             var item = new Array();
             item['text'] = word;

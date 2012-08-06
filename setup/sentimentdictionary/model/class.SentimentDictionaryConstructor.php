@@ -34,6 +34,7 @@ class SentimentDictionaryConstructor {
     private $dict;
     
     public function __construct() {
+        $counts = array();
         $file = fopen(ROOT_PATH."/extlib/SentiWordNet/SentiWordNet_3.0.0.txt", "r");
         while (!feof($file)) {
             $data = fgetcsv($file, 1000, "\t");
@@ -42,8 +43,19 @@ class SentimentDictionaryConstructor {
                 $words = explode('#', $word_rank);
                 $count = count($words);
                 for ($i=0; $i<$count; $i+=2) {
-                    $this->dict[$words[$i]]['score'][$words[$i+1]] = $data[2]-$data[3];
+                    if (isset($this->dict[$words[$i]][$words[$i+1]])) {
+                        $this->dict[$words[$i]][$words[$i+1]] += $data[2]-$data[3];
+                        $counts[$words[$i]][$words[$i+1]]++;
+                    } else {
+                        $this->dict[$words[$i]][$words[$i+1]] = $data[2]-$data[3];
+                        $counts[$words[$i]][$words[$i+1]] = 1;
+                    }
                 }
+            }
+        }
+        foreach ($counts as $word => $data) {
+            foreach ($data as $rank => $count) {
+                $this->dict[$word][$rank] /= $count;
             }
         }
     }
@@ -52,7 +64,7 @@ class SentimentDictionaryConstructor {
         if (isset($this->dict[$word])) {
             $score = 0;
             $sum = 0;
-            foreach ($this->dict[$word]['score'] as $k => $v) {
+            foreach ($this->dict[$word] as $k => $v) {
                 // Give weightage to rank as well
                 $score += (1.0/$k)*$v;
                 $sum += (1.0/$k);
