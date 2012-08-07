@@ -3,10 +3,10 @@
 <script type="text/javascript">{$type}</script>
 <script type="text/javascript">
     $(document).ready(function(){
-        if (typeof connection_analysis.mutuals == 'undefined') {
+        /*if (typeof connection_analysis.mutuals == 'undefined') {
             connection_analysis.mutuals = mutuals;
             console.log(connection_analysis.mutuals);
-        }
+        }*/
         if (type == "friend") {
             if (typeof connection_analysis.friends != 'undefined') {
                 connections = connection_analysis.friends;
@@ -31,6 +31,7 @@
                 "<table><tr><td><img src=\"" + user.user.avatar+"\"/></td>" +
                 "<td style=\"margin-left:5px\">" + user.user.username + "</td></tr></table>" +
                 "<p>" + user.user.description + "</p>" +
+                "<p>Status count: <strong>" + user.user.statuses_count + "</strong></p>" +
                 "<p>" + user.user.username + " mostly talks about: </p>" ;
             $.ajax({
                type: "POST",
@@ -53,7 +54,8 @@
                 "<table><tr><td><img src=\"" + user.user.avatar+"\"/></td>" +
                 "<td style=\"margin-left:5px\">" + user.user.username + "</td></tr></table>" +
                 "<p>" + user.user.description + "</p>" +
-                "<p>Following count: <strong>" + user.user.friends_count + "</strong></p>" + 
+                "<p>Following count: <strong>" + user.user.friends_count + "</strong></p>" +
+                "<p>Status count: <strong>" + user.user.statuses_count + "</strong></p>" +
                 "<p>" + user.user.username + " mostly talks about: </p>" ;
             $.ajax({
                type: "POST",

@@ -240,23 +240,36 @@ Graph.Renderer.Raphael.prototype = {
             node.render = function(r, node) {
                 /* the default node drawing */
                 var color = Raphael.getColor();
-                if (node.relation == "follower") {
-                    var ele = r.ellipse(0, 0, 10, 10).attr({fill: "red", stroke: "red", "stroke-width": 2});
-                    var x=0;
-                    var y=15;
-                } else if (node.relation == "friend") {
-                    var ele = r.rect(0, 0, 20, 20).attr({fill: "green", stroke: "green", "stroke-width": 2});
-                    var x=10;
-                    var y=25;
-                } else if (node.relation == "mutual") {
-                    var ele = r.rect(0, 0, 20, 20).attr({fill: "blue", stroke: "blue", "stroke-width": 2, r:5});
-                    var x=10;
-                    var y=25;
+                if (type == "follower") {
+                    if (node.relation == "follower") {
+                        var ele = r.ellipse(0, 0, node.friend_count, node.friend_count).attr({fill: "red", stroke: "red", "stroke-width": 2});
+                        var x=0;
+                        var y=15;
+                    } else if (node.relation == "mutual") {
+                        var ele = r.ellipse(0, 0, node.friend_count, node.friend_count).attr({fill: "blue", stroke: "blue", "stroke-width": 2, r:5});
+                        var x=0;
+                        var y=15;
+                    } else {
+                        var ele = r.ellipse(0, 0, 10, 10).attr({fill: "white", stroke: "black", "stroke-width": 2});
+                        var x=0;
+                        var y=15;
+                    }
                 } else {
-                    var ele = r.ellipse(0, 0, 10, 10).attr({fill: "white", stroke: "black", "stroke-width": 2});
-                    var x=0;
-                    var y=15;
+                    if (node.relation == "friend") {
+                        var ele = r.ellipse(0, 0, node.status_count, node.status_count).attr({fill: "green", stroke: "green", "stroke-width": 2});
+                        var x=0;
+                        var y=15;
+                    } else if (node.relation == "mutual") {
+                        var ele = r.ellipse(0, 0, node.status_count, node.status_count).attr({fill: "blue", stroke: "blue", "stroke-width": 2, r:5});
+                        var x=0;
+                        var y=15;
+                    } else {
+                        var ele = r.ellipse(0, 0, 10, 10).attr({fill: "white", stroke: "black", "stroke-width": 2});
+                        var x=0;
+                        var y=15;
+                    }
                 }
+                
                 /* set DOM node ID */
                 ele.node.id = node.label || node.id;
                 ele.node.onclick = handleClick;
