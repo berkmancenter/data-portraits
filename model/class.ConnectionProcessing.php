@@ -38,14 +38,18 @@ class ConnectionProcessing {
     private $vals;
     private $mutuals;
     
-    public function __construct($connection, $vals) {
+    public function __construct($connection, $vals, $mutuals) {
         $this->connection = $connection;
         $this->vals = $vals;
-        /*$friends_data = $this->getAllFriends($connection, $vals);
-        $followers_data = $this->getAllFollowers($connection, $vals);
-        $this->mutuals = $this->getAllMutuals($friends_data['assoc'], $followers_data['assoc']);*/
-        unset($friends_data);
-        unset($followers_data);
+        if (!$mutuals) {
+            $friends_data = $this->getAllFriends($connection, $vals);
+            $followers_data = $this->getAllFollowers($connection, $vals);
+            $this->mutuals = $this->getAllMutuals($friends_data['assoc'], $followers_data['assoc']);
+            unset($friends_data);
+            unset($followers_data);
+        } else {
+            $this->mutuals = $mutuals;
+        }
     }
     
     public function getFollowers() {
@@ -84,14 +88,18 @@ class ConnectionProcessing {
                 array_push($data[$mention->created_by]['mentions'], $mention);
             }
         }
-        return $data;
+        $data = $this->processData($data);
+        $array = array(
+            'final_list' => $data,
+            'mutuals' => $this->mutuals
+        );
+        return $array;
     }
     
     public function getFollowees($statuses) {
         $vals = $this->vals;
         $user = $vals['screen_name'];
         $data = array();
-        $data = self::getFollowers();
         $retweets_of = array();
         // Find mentions by main user
         foreach ($statuses as $status) {
@@ -129,7 +137,15 @@ class ConnectionProcessing {
                 }
             }
         }
-        
+        $data = $this->processData($data);
+        $array = array(
+            'final_list' => $data,
+            'mutuals' => $this->mutuals
+        );
+        return $array;
+    }
+    
+    public function processData($data) {
         $users = array();
         foreach ($data as $user => $item) {
             array_push($users, $user);
@@ -141,20 +157,16 @@ class ConnectionProcessing {
         $final_list = array();
         
         for ($i = 0; $i < $count; $i++) {
-            if ( ( isset($data[$users_details[$i]->username]['retweets_me_count']) || isset($data[$users_details[$i]->username]['mentions_me_count'])) &&
-                 ( isset($data[$users_details[$i]->username]['retweets_by_me_count']) || isset($data[$users_details[$i]->username]['mentions_by_me_count']))) {
-                $relation = "mutual";
-            } else if (isset($data[$users_details[$i]->username]['retweets_me_count']) || isset($data[$users_details[$i]->username]['mentions_me_count'])) {
+            if (isset($data[$users_details[$i]->username]['retweets_me_count']) || isset($data[$users_details[$i]->username]['mentions_me_count'])) {
                 $relation = "follower";
             } else if (isset($data[$users_details[$i]->username]['retweets_by_me_count']) || isset($data[$users_details[$i]->username]['mentions_by_me_count'])){
                 $relation = "friend";
             } else {
                 continue;
             }
-            //$relation = "friend";
-            /*if (in_array($users_details[$i]->id, $this->mutuals)) {
+            if (in_array($users_details[$i]->id, $this->mutuals)) {
                 $relation = "mutual";
-            }*/
+            }
             $array = array(
                 'user' => $users_details[$i],
                 'relation' => $relation

@@ -1,11 +1,25 @@
 <script type="text/javascript">{$connections}</script>
+<script type="text/javascript">{$mutuals}</script>
+<script type="text/javascript">{$type}</script>
 <script type="text/javascript">
     $(document).ready(function(){
-        if (typeof connection_analysis.data != 'undefined') {
-            connections = connection_analysis.data;
+        if (typeof connection_analysis.mutuals == 'undefined') {
+            connection_analysis.mutuals = mutuals;
+            console.log(connection_analysis.mutuals);
         }
-        console.log(connections);
-        connection_analysis.data = connections;
+        if (type == "friend") {
+            if (typeof connection_analysis.friends != 'undefined') {
+                connections = connection_analysis.friends;
+            } else {
+                connection_analysis.friends = connections;
+            }
+        } else {
+            if (typeof connection_analysis.followers != 'undefined') {
+                connections = connection_analysis.followers;
+            } else {
+                connection_analysis.followers = connections;
+            }
+        }
     });
     function handleClick() {
         var user = connections[this.id];

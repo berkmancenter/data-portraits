@@ -44,28 +44,81 @@
         }
     }
     
-    function connectionAnalysis() {
+    function followerAnalysis() {
         $("#spinner").show();
         removeTopics();
-        if (typeof connection_analysis.data != 'undefined') {
+        if (typeof connection_analysis.followers != 'undefined') {
             $.ajax({
                 type: "POST",
                 url: "{$site_root_path}pages/connections.php",
+                data: "type=follower",
                 success: function(msg){
                     $("#mainstage").html(msg);
                     $("#spinner").hide();
                 }
             });
         } else {
+            if (typeof connection_analysis.mutuals != 'undefined') {
+                $.ajax({
+                    type: "POST",
+                    url: "{$site_root_path}pages/connections.php",
+                    data: "type=follower&username="+user['username']+"&mutuals="+
+                           connection_analysis.mutuals+"&statuses="+json_statuses,
+                    success: function(msg){
+                        $("#mainstage").html(msg);
+                        $("#spinner").hide();
+                    }
+                });
+            } else {
+                $.ajax({
+                    type: "POST",
+                    url: "{$site_root_path}pages/connections.php",
+                    data: "type=follower&username="+user['username']+"&statuses="+json_statuses,
+                    success: function(msg){
+                        $("#mainstage").html(msg);
+                        $("#spinner").hide();
+                    }
+                });
+            }
+        }
+    }
+    
+    function friendAnalysis() {
+        $("#spinner").show();
+        removeTopics();
+        if (typeof connection_analysis.friends != 'undefined') {
             $.ajax({
                 type: "POST",
                 url: "{$site_root_path}pages/connections.php",
-                data: "username="+user['username']+"&statuses="+json_statuses,
+                data: "type=friend",
                 success: function(msg){
                     $("#mainstage").html(msg);
                     $("#spinner").hide();
                 }
             });
+        } else {
+            if (typeof connection_analysis.mutuals != 'undefined') {
+                $.ajax({
+                    type: "POST",
+                    url: "{$site_root_path}pages/connections.php",
+                    data: "type=friend&username="+user['username']+"&mutuals="+
+                           connection_analysis.mutuals+"&statuses="+json_statuses,
+                    success: function(msg){
+                        $("#mainstage").html(msg);
+                        $("#spinner").hide();
+                    }
+                });
+            } else {
+                $.ajax({
+                    type: "POST",
+                    url: "{$site_root_path}pages/connections.php",
+                    data: "type=friend&username="+user['username']+"&statuses="+json_statuses,
+                    success: function(msg){
+                        $("#mainstage").html(msg);
+                        $("#spinner").hide();
+                    }
+                });
+            }
         }
     }
     
@@ -133,7 +186,8 @@
                     <li class="right"><a href="{$site_root_path}pages/home.php" class="grey-button pcb"><span>Analyse new User</span></a></li>
                     <li class="right"><a href="#" class="grey-button pcb" onclick="sentiment()"><span>Sentiment Analysis</a></span></li>
                     <li class="right"><a href="#" class="grey-button pcb" onclick="topicModelling()"><span>Topic Modelling</a></span></li>
-                    <li class="right"><a href="#" class="grey-button pcb" onclick="connectionAnalysis()"><span>Connection Analysis</a></span></li>
+                    <li class="right"><a href="#" class="grey-button pcb" onclick="followerAnalysis()"><span>Follower Analysis</a></span></li>
+                    <li class="right"><a href="#" class="grey-button pcb" onclick="friendAnalysis()"><span>Friend Analysis</a></span></li>
                     <li class="right"><a href="#" class="grey-button pcb" onclick="wordAnalysis()"><span>Word Analysis</a></span></li>
                 </ul>
             </div>
