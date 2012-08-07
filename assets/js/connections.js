@@ -37,7 +37,7 @@ $(document).ready(function () {
     g.addNode(user['id'], {label: user['username']});
     for (var i in connections) {
 	if (type == "follower") {
-	    friend_circle_size = calculateSize(connections[i].user.friends_count);
+	    friend_circle_size = calculateSize(connections[i].user.friends_count * 10);
 	    follower_circle_size = calculateSize(connections[i].user.followers_count);
 	    g.addNode(connections[i].user.id, {label: connections[i].user.username, relation: connections[i].relation,
 		      friend_count: friend_circle_size, follower_count: follower_circle_size});

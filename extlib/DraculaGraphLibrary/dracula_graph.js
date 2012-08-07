@@ -242,11 +242,11 @@ Graph.Renderer.Raphael.prototype = {
                 var color = Raphael.getColor();
                 if (type == "follower") {
                     if (node.relation == "follower") {
-                        var ele = r.ellipse(0, 0, node.friend_count, node.friend_count).attr({fill: "red", stroke: "red", "stroke-width": 2});
+                        var ele = r.ellipse(0, 0, node.follower_count, node.follower_count).attr({fill: "red", stroke: "red", "stroke-width": 2});
                         var x=0;
                         var y=15;
                     } else if (node.relation == "mutual") {
-                        var ele = r.ellipse(0, 0, node.friend_count, node.friend_count).attr({fill: "blue", stroke: "blue", "stroke-width": 2, r:5});
+                        var ele = r.ellipse(0, 0, node.follower_count, node.follower_count).attr({fill: "blue", stroke: "blue", "stroke-width": 2, r:5});
                         var x=0;
                         var y=15;
                     } else {
