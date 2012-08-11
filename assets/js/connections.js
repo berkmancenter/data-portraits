@@ -1,6 +1,13 @@
 
 var redraw, g, renderer;
 
+var d = new Date;
+var cur_date = new Object;
+cur_date.date = d.getDate();
+cur_date.month = d.getMonth();
+cur_date.year = d.getFullYear();
+var cur_utc = Date.UTC(cur_date.year,cur_date.month,cur_date.date)/1000;
+
 function calculateSize(count) {
     var size;
     if (count <= 100) {
@@ -21,13 +28,25 @@ function calculateSize(count) {
 	size = 18;
     } else if (count <= 10000) {
 	size = 22;
+    } else if (count <= 14000) {
+	size = 24;
+    } else if (count <= 20000) {
+	size = 26;
     } else if (count <= 25000) {
-	size = 25;
+	size = 28;
     } else {
 	size = 30;
     }
     return size;
 }
+
+function getPostingFrequency(joined, status_count) {
+    var arr = joined.split(' ');
+    var joined_utc = Date.parse(arr[1] + ' ' + arr[2] + ', ' + arr[5])/1000;
+    var since = Math.round((cur_utc - joined_utc)/(86400*7));
+    return status_count/since;
+}
+
 /* only do all this when document has finished loading (needed for RaphaelJS) */
 $(document).ready(function () {
     var width = 0.8*$("#mainstage").width();
@@ -42,7 +61,8 @@ $(document).ready(function () {
 	    g.addNode(connections[i].user.id, {label: connections[i].user.username, relation: connections[i].relation,
 		      friend_count: friend_circle_size, follower_count: follower_circle_size});
 	} else {
-	    status_circle_size = calculateSize(connections[i].user.statuses_count);
+	    var freq = getPostingFrequency(connections[i].user.joined, connections[i].user.statuses_count);
+	    status_circle_size = calculateSize(freq*250);
 	    g.addNode(connections[i].user.id, {label: connections[i].user.username, relation: connections[i].relation,
 		      status_count: status_circle_size});
 	}

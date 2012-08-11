@@ -272,6 +272,7 @@ Graph.Renderer.Raphael.prototype = {
                 
                 /* set DOM node ID */
                 ele.node.id = node.label || node.id;
+                ele.node.relation = node.relation;
                 ele.node.onclick = handleClick;
                 shape = r.set().
                     push(ele).
