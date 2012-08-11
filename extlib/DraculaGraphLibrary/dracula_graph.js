@@ -241,12 +241,33 @@ Graph.Renderer.Raphael.prototype = {
                 /* the default node drawing */
                 var color = Raphael.getColor();
                 if (type == "follower") {
+                    console.log(node.label + "-- FR " + node.friend_count + "("+node.friend_size+") -- FO "
+                                + node.follower_count + "("+node.follower_size+")");
+                    if (node.follower_size > node.friend_size) {
+                        var main_size = node.follower_size;
+                        var sub_size = node.friend_size;
+                    } else {
+                        var main_size = node.friend_size;
+                        var sub_size = node.follower_size;
+                    }
+                    diff = main_size - sub_size;
+                    if (diff==0 && node.follower_count != node.friend_count) {
+                        diff = 0.3;
+                    }
+                    if (node.follower_count > node.friend_count) {
+                        main_color = "yellow";
+                        sub_color = node.relation=="follower"?"red":"blue";
+                    } else {
+                        main_color = node.relation=="follower"?"red":"blue";
+                        sub_color = "yellow";
+                    }
+                    var f = 1.2;
                     if (node.relation == "follower") {
-                        var ele = r.ellipse(0, 0, node.follower_count, node.follower_count).attr({fill: "red", stroke: "red", "stroke-width": 2});
+                        var ele = r.ellipse(0, 0, f*main_size, f*main_size).attr({fill: main_color, stroke: sub_color, "stroke-width": f*diff});
                         var x=0;
                         var y=15;
                     } else if (node.relation == "mutual") {
-                        var ele = r.ellipse(0, 0, node.follower_count, node.follower_count).attr({fill: "blue", stroke: "blue", "stroke-width": 2, r:5});
+                        var ele = r.ellipse(0, 0, f*main_size, f*main_size).attr({fill: main_color, stroke: sub_color, "stroke-width": f*diff});
                         var x=0;
                         var y=15;
                     } else {
@@ -272,7 +293,6 @@ Graph.Renderer.Raphael.prototype = {
                 
                 /* set DOM node ID */
                 ele.node.id = node.label || node.id;
-                ele.node.relation = node.relation;
                 ele.node.onclick = handleClick;
                 shape = r.set().
                     push(ele).

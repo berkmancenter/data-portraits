@@ -11,11 +11,11 @@ var cur_utc = Date.UTC(cur_date.year,cur_date.month,cur_date.date)/1000;
 function calculateSize(count) {
     var size;
     if (count <= 100) {
-	size = 2;
-    } else if (count < 250) {
 	size = 4;
+    } else if (count < 250) {
+	size = 6;
     } else if (count < 500) {
-	size = 7;
+	size = 8;
     } else if (count <= 1000) {
 	size = 10;
     } else if (count <= 2000) {
@@ -56,12 +56,14 @@ $(document).ready(function () {
     g.addNode(user['id'], {label: user['username']});
     for (var i in connections) {
 	if (type == "follower") {
-	    friend_circle_size = calculateSize(connections[i].user.friends_count * 10);
+	    friend_circle_size = calculateSize(connections[i].user.friends_count);
 	    follower_circle_size = calculateSize(connections[i].user.followers_count);
 	    g.addNode(connections[i].user.id, {label: connections[i].user.username, relation: connections[i].relation,
-		      friend_count: friend_circle_size, follower_count: follower_circle_size});
+		      friend_size: friend_circle_size, follower_size: follower_circle_size,
+		      friend_count: connections[i].user.friends_count, follower_count: connections[i].user.followers_count});
 	} else {
 	    var freq = getPostingFrequency(connections[i].user.joined, connections[i].user.statuses_count);
+	    freq_all[connections[i].user.username] = freq;
 	    status_circle_size = calculateSize(freq*250);
 	    g.addNode(connections[i].user.id, {label: connections[i].user.username, relation: connections[i].relation,
 		      status_count: status_circle_size});

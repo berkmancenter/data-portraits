@@ -2,6 +2,7 @@
 <script type="text/javascript">{$mutuals}</script>
 <script type="text/javascript">{$type}</script>
 <script type="text/javascript">
+    var freq_all = new Object;
     $(document).ready(function(){
         /*if (typeof connection_analysis.mutuals == 'undefined') {
             connection_analysis.mutuals = mutuals;
@@ -22,11 +23,7 @@
         }
     });
     function handleClick() {
-        if (typeof this.userset != undefined) {
-            var user = connections[this.user];
-        } else {
-            var user = connections[this.id];
-        }
+        var user = connections[this.id];
         var content =
             "<h3>About the User</h3>";
         if (user.relation == "friend") {
@@ -50,7 +47,7 @@
                 "<table><tr><td><img src=\"" + user.user.avatar+"\"/></td>" +
                 "<td style=\"margin-left:5px\">" + user.user.username + "</td></tr></table>" +
                 "<p>" + user.user.description + "</p>" +
-                "<p>Following count: <strong>" + user.user.friends_count + "</strong></p>"
+                "<p>Following count: <strong>" + user.user.friends_count + "</strong></p>" +
                 "<p>Followers count: <strong>" + user.user.followers_count + "</strong></p>";
             $("#log").html(content);
         } else {
