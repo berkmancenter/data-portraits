@@ -5,7 +5,11 @@ onmessage = function(e) {
     var sentences;
     var tweets;
     var i = 0;
-    statuses = e.data;
+    
+    var data = e.data
+    var statuses = data.status;
+    var K = data.num;
+    
     sentences = new Array();
     tweets=new Array();
     for (var i in statuses) {
@@ -39,7 +43,6 @@ onmessage = function(e) {
 
     var V = vocab.length;
     var M = documents.length;
-    var K = 10;
     var alpha = .05;  // per-document distributions over topics
     var beta = .005;  // per-topic distributions over words
 

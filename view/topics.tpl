@@ -1,3 +1,6 @@
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <script type="text/javascript" src="{$site_root_path}extlib/jQuery/jquery1.7.2.min.js"></script>
 <script type="text/javascript">{$statuses}</script>
 <script type="text/javascript">
@@ -39,9 +42,11 @@
 	return [array1, array2];
     }
     
-    function performTopicModelling() {
+    function performTopicModelling(topic_count) {
 	var worker = new Worker("{$site_root_path}assets/js/topicmodelling/topicise.js");
-	worker.postMessage(statuses);
+	{literal}
+	worker.postMessage({'status': statuses, 'num': topic_count});
+	{/literal}
 	worker.onmessage = function (event) {
 	    var data = event.data;
 	    num_topics = data.num;
@@ -68,7 +73,7 @@
 	var table_topics = '<table class="height97">';
 	for (k=0; k<num;) {
 	    table_topics += "<tr>";
-	    for (var j=0; j<2; j++) {
+	    for (var j=0; j<2 && k<num ; j++, k++) {
 		var shuffled = shuffle(topic_text[k], topic_text_values[k]);
 		topic_text[k] = shuffled[0];
 		topic_text_values[k] = shuffled[1];
@@ -87,7 +92,6 @@
 		    }
 		}
 		table_topics +="</ul></div></td>";
-		k++;
 	    }
 	    table_topics +="</tr>";
 	}
@@ -115,6 +119,7 @@
 	}
 	if (typeof topic_modelling.topics != 'undefined') {
 	    num_topics = topic_modelling.num_topics;
+	    $("#num_topics").val(num_topics);
 	    topics = topic_modelling.topics;
 	    topic_text = topic_modelling.topic_text;
 	    topic_text_values = topic_modelling.topic_text_values;
@@ -123,9 +128,33 @@
 	    displayTopics(topic_modelling.num_topics, topic_modelling.topic_text,
 			  topic_modelling.topic_text_values, topic_modelling.tweets);
 	} else {
-	    performTopicModelling();
+	    performTopicModelling(8);
 	}
     });
+    
+    function analyse_topics() {
+	$("#spinner").show();
+	var topic_count = parseInt($("#num_topics").val());
+	$("#topiccloud").empty();
+	performTopicModelling(topic_count);
+    }
 </script>
+<div>
+    <label>Number of Topics: </label>
+    <select name="num_topics" id="num_topics">
+	<option>1</option>
+	<option>2</option>
+	<option>3</option>
+	<option>4</option>
+	<option>5</option>
+	<option>6</option>
+	<option>7</option>
+	<option selected="selected">8</option>
+	<option>9</option>
+	<option>10</option>
+    </select>
+    <button id="go_topic" name="go_topic" onclick="analyse_topics()">Analyse</button>
+</div>
+
 <div id="topiccloud"></div>
 <br/>
