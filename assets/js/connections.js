@@ -53,12 +53,17 @@ function getPostingFrequency(joined, status_count) {
 
 /* only do all this when document has finished loading (needed for RaphaelJS) */
 $(document).ready(function () {
-    var width = 0.8*$("#mainstage").width();
+    var width = $("#mainstage").width()*0.8;
     var height = $("#mainstage").height()*1.5;
     
     g = new Graph();
     g.addNode(user['id'], {label: user['username']});
+    var k = 0;
+    var user_to_associate = user['id'];
+    var users_list = new Array;
+    var num_of_edges_per_user = 3;
     for (var i in connections) {
+	users_list.push(connections[i].user.username);
 	if (type == "follower") {
 	    friend_circle_size = calculateSize(connections[i].user.friends_count);
 	    follower_circle_size = calculateSize(connections[i].user.followers_count);
@@ -68,7 +73,7 @@ $(document).ready(function () {
 	} else {
 	    var freq = getPostingFrequency(connections[i].user.joined, connections[i].user.statuses_count);
 	    freq_all[connections[i].user.username] = freq;
-	    status_circle_size = calculateSize(freq*250);
+	    status_circle_size = calculateSize(freq*365);
 	    g.addNode(connections[i].user.id, {label: connections[i].user.username, relation: connections[i].relation,
 		      status_count: status_circle_size});
 	}
@@ -80,32 +85,25 @@ $(document).ready(function () {
 	}
 	switch (connections[i].relation) {
 	    case "follower":
-		style = "red";
 		directed_val = true;
 		break;
 	    case "friend":
-		style = "green";
 		directed_val = true;
 		break;
 	    case "mutual":
 		directed_val = false;
-		style = "blue";
 	}
+	if (k!=0 && (k%num_of_edges_per_user==0)) {
+	    user_to_associate = connections[users_list[(k/num_of_edges_per_user)-1]].user.id;
+	}
+	k++;
 	if (connections[i].relation != "follower") {
-	    if (heavy) {
-		g.addEdge(user['id'], connections[i].user.id, { directed: directed_val, stroke: style, fill: style });
-	    } else {
-		g.addEdge(user['id'], connections[i].user.id, { directed: directed_val, stroke: style });
-	    }
+	    g.addEdge(user_to_associate, connections[i].user.id, { directed: directed_val, "stroke": "white"});
 	} else {
-	    if (heavy) {
-		g.addEdge(connections[i].user.id, user['id'], { directed: directed_val, stroke: style, fill: style });
-	    } else {
-		g.addEdge(connections[i].user.id, user['id'], { directed: directed_val, stroke: style });
-	    }
+	    g.addEdge(connections[i].user.id, user_to_associate, { directed: directed_val, "stroke": "white"});
 	}
-	
     }
+    console.log(users_list);
     
     /* layout the graph using the Spring layout implementation */
     var layouter = new Graph.Layout.Spring(g);

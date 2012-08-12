@@ -241,8 +241,6 @@ Graph.Renderer.Raphael.prototype = {
                 /* the default node drawing */
                 var color = Raphael.getColor();
                 if (type == "follower") {
-                    console.log(node.label + "-- FR " + node.friend_count + "("+node.friend_size+") -- FO "
-                                + node.follower_count + "("+node.follower_size+")");
                     if (node.follower_size > node.friend_size) {
                         var main_size = node.follower_size;
                         var sub_size = node.friend_size;
@@ -276,12 +274,13 @@ Graph.Renderer.Raphael.prototype = {
                         var y=15;
                     }
                 } else {
+                    var f=0.7;
                     if (node.relation == "friend") {
-                        var ele = r.ellipse(0, 0, node.status_count, node.status_count).attr({fill: "green", stroke: "green", "stroke-width": 2});
+                        var ele = r.ellipse(0, 0, f*node.status_count, f*node.status_count).attr({fill: "green", stroke: "green", "stroke-width": 2});
                         var x=0;
                         var y=15;
                     } else if (node.relation == "mutual") {
-                        var ele = r.ellipse(0, 0, node.status_count, node.status_count).attr({fill: "blue", stroke: "blue", "stroke-width": 2, r:5});
+                        var ele = r.ellipse(0, 0, f*node.status_count, f*node.status_count).attr({fill: "blue", stroke: "blue", "stroke-width": 2, r:5});
                         var x=0;
                         var y=15;
                     } else {

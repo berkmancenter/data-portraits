@@ -53,6 +53,10 @@ class ConnectionsController extends DPController {
         $this->generateView();
     }
     
+    private function compare($a, $b) {
+        return $a->weight < $b->weight;
+    }
+    
     private function crawl($username, $statuses) {
         $authentication = array(
             'token' => $_SESSION['oauth_token'],
@@ -75,6 +79,7 @@ class ConnectionsController extends DPController {
         } else {
             $people = $connection_processing->getFollowers();
         }
+        uasort($people['final_list'], array($this, 'compare'));
         return $people;
     }
 }

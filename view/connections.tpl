@@ -12,13 +12,13 @@
             if (typeof connection_analysis.friends != 'undefined') {
                 connections = connection_analysis.friends;
             } else {
-                connection_analysis.friends = connections;
+                //connection_analysis.friends = connections;
             }
         } else {
             if (typeof connection_analysis.followers != 'undefined') {
                 connections = connection_analysis.followers;
             } else {
-                connection_analysis.followers = connections;
+                //connection_analysis.followers = connections;
             }
         }
     });
