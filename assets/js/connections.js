@@ -10,7 +10,11 @@ var cur_utc = Date.UTC(cur_date.year,cur_date.month,cur_date.date)/1000;
 
 function calculateSize(count) {
     var size;
-    if (count <= 100) {
+    if (count <= 10) {
+	size = 1;
+    } if (count <= 50) {
+	size = 2;
+    } else if (count <= 100) {
 	size = 4;
     } else if (count < 250) {
 	size = 6;
