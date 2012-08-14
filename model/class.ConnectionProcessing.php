@@ -68,26 +68,58 @@ class ConnectionProcessing {
         }
         $data = array();
         foreach ($retweets as $retweet) {
-            if (isset($data[$retweet->created_by]['retweets_me_count'])) {
-                $data[$retweet->created_by]['retweets_me_count']++;
-                array_push($data[$retweet->created_by]['retweets'], $retweet);
+            if (isset($data[$retweet->created_by_id]['retweets_me_count'])) {
+                $data[$retweet->created_by_id]['retweets_me_count']++;
+                array_push($data[$retweet->created_by_id]['retweets'], $retweet);
             } else {
-                $data[$retweet->created_by]['retweets_me_count'] = 1;
-                $data[$retweet->created_by]['retweets'] = array();
-                array_push($data[$retweet->created_by]['retweets'], $retweet);
+                $data[$retweet->created_by_id]['retweets_me_count'] = 1;
+                $data[$retweet->created_by_id]['retweets'] = array();
+                array_push($data[$retweet->created_by_id]['retweets'], $retweet);
             }
         }
         
         foreach ($mentions as $mention) {
-            if (isset($data[$mention->created_by]['mentions_me_count'])) {
-                $data[$mention->created_by]['mentions_me_count']++;
-                array_push($data[$mention->created_by]['mentions'], $mention);
+            if (isset($data[$mention->created_by_id]['mentions_me_count'])) {
+                $data[$mention->created_by_id]['mentions_me_count']++;
+                array_push($data[$mention->created_by_id]['mentions'], $mention);
             } else {
-                $data[$mention->created_by]['mentions_me_count'] = 1;
-                $data[$mention->created_by]['mentions'] = array();
-                array_push($data[$mention->created_by]['mentions'], $mention);
+                $data[$mention->created_by_id]['mentions_me_count'] = 1;
+                $data[$mention->created_by_id]['mentions'] = array();
+                array_push($data[$mention->created_by_id]['mentions'], $mention);
             }
         }
+        
+        $total_count = count($data);
+        $rand_max = getrandmax();
+        $total = 95;
+        $temp = $this->connection->getFollowers($vals);
+        $followers = $temp->ids;
+        $count_fols = count($followers);
+        $max_base = $count_fols<$rand_max?$count_fols:$rand_max;
+        $base = rand(1, $max_base);
+        $factor = rand(1, round($max_base/10));
+        $remaining = $total - $total_count;
+        $index = $base;
+        $flag = 0;
+        unset($temp);
+        for ($i = 0; $i < $remaining; $i++) {
+            $index = ($index + $i*$factor)%$count_fols;
+            $collisions = 0;
+            while (isset($data[$followers[$index]])) {
+                $index = ($index+1)%$count_fols;
+                $collisions++;
+                if ($collisions == 10) {
+                    $flag = 1;
+                    break;
+                }
+            }
+            if ($flag) {
+                break;
+            }
+            $data[$followers[$index]]['retweets_me_count'] = 0;
+            $data[$followers[$index]]['retweets'] = array();
+        }
+        
         $data = $this->processData($data);
         $array = array(
             'final_list' => $data,
@@ -127,16 +159,48 @@ class ConnectionProcessing {
         foreach ($retweets_by as $retweet) {
             if ($retweet->retweet_of) {
                 $status = $retweet->retweet_of;
-                if (isset($data[$status->created_by]['retweets_by_me_count'])) {
-                    $data[$status->created_by]['retweets_by_me_count']++;
-                    array_push($data[$status->created_by]['retweets'], $status);
+                if (isset($data[$status->created_by_id]['retweets_by_me_count'])) {
+                    $data[$status->created_by_id]['retweets_by_me_count']++;
+                    array_push($data[$status->created_by_id]['retweets'], $status);
                 } else {
-                    $data[$status->created_by]['retweets_by_me_count'] = 1;
-                    $data[$status->created_by]['retweets'] = array();
-                    array_push($data[$status->created_by]['retweets'], $status);
+                    $data[$status->created_by_id]['retweets_by_me_count'] = 1;
+                    $data[$status->created_by_id]['retweets'] = array();
+                    array_push($data[$status->created_by_id]['retweets'], $status);
                 }
             }
         }
+        
+        $total_count = count($data);
+        $rand_max = getrandmax();
+        $total = 95;
+        $temp = $this->connection->getFriends($vals);
+        $friends = $temp->ids;
+        $count_frnds = count($friends);
+        $max_base = $count_frnds<$rand_max?$count_frnds:$rand_max;
+        $base = rand(1, $max_base);
+        $factor = rand(1, round($max_base/10));
+        $remaining = $total - $total_count;
+        $index = $base;
+        $flag = 0;
+        unset($temp);
+        for ($i = 0; $i < $remaining; $i++) {
+            $index = ($index + $i*$factor)%$count_frnds;
+            $collisions = 0;
+            while (isset($data[$friends[$index]])) {
+                $index = ($index+1)%$count_frnds;
+                $collisions++;
+                if ($collisions == 10) {
+                    $flag = 1;
+                    break;
+                }
+            }
+            if ($flag) {
+                break;
+            }
+            $data[$friends[$index]]['retweets_me_count'] = 0;
+            $data[$friends[$index]]['retweets'] = array();
+        }
+        
         $data = $this->processData($data);
         $array = array(
             'final_list' => $data,
@@ -151,15 +215,15 @@ class ConnectionProcessing {
             array_push($users, $user);
         }
         
-        $users_details = UserProcessing::getUsersDetails($this->connection, $users, "screen_name");
+        $users_details = UserProcessing::getUsersDetails($this->connection, $users);
         $count = count($users);
         
         $final_list = array();
         
         for ($i = 0; $i < $count; $i++) {
-            if (isset($data[$users_details[$i]->username]['retweets_me_count']) || isset($data[$users_details[$i]->username]['mentions_me_count'])) {
+            if (isset($data[$users_details[$i]->id]['retweets_me_count']) || isset($data[$users_details[$i]->id]['mentions_me_count'])) {
                 $relation = "follower";
-            } else if (isset($data[$users_details[$i]->username]['retweets_by_me_count']) || isset($data[$users_details[$i]->username]['mentions_by_me_count'])){
+            } else if (isset($data[$users_details[$i]->id]['retweets_by_me_count']) || isset($data[$users_details[$i]->id]['mentions_by_me_count'])){
                 $relation = "friend";
             } else {
                 continue;
@@ -171,13 +235,13 @@ class ConnectionProcessing {
                 'user' => $users_details[$i],
                 'relation' => $relation
             );
-            if (isset($data[$users_details[$i]->username]['mentions_by_me_count'])) {
-                $array['mentions_by_me_count'] = $data[$users_details[$i]->username]['mentions_by_me_count'];
-                $array['mentions'] = $data[$users_details[$i]->username]['mentions'];
+            if (isset($data[$users_details[$i]->id]['mentions_by_me_count'])) {
+                $array['mentions_by_me_count'] = $data[$users_details[$i]->id]['mentions_by_me_count'];
+                $array['mentions'] = $data[$users_details[$i]->id]['mentions'];
             }
-            if (isset($data[$users_details[$i]->username]['retweets_by_me_count'])) {
-                $array['retweets_by_me_count'] = $data[$users_details[$i]->username]['retweets_by_me_count'];
-                $array['retweets'] = $data[$users_details[$i]->username]['retweets'];
+            if (isset($data[$users_details[$i]->id]['retweets_by_me_count'])) {
+                $array['retweets_by_me_count'] = $data[$users_details[$i]->id]['retweets_by_me_count'];
+                $array['retweets'] = $data[$users_details[$i]->id]['retweets'];
             }
             
             $friendship = new Connection($array);

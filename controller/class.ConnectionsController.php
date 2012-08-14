@@ -46,7 +46,6 @@ class ConnectionsController extends DPController {
             unset($people);
             $this->addToView('connections', $connections);
             $this->addToView('mutuals', $mutuals);
-            //$this->addToView('connections', $people);
         }
         $type = "var type = '".$_POST['type']."'";
         $this->addToView('type', $type);
