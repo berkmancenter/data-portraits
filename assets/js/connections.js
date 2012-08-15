@@ -9,7 +9,7 @@ cur_date.year = d.getFullYear();
 var cur_utc = Date.UTC(cur_date.year,cur_date.month,cur_date.date)/1000;
 
 function calculateSize(count) {
-    var size;
+    /*var size;
     if (count <= 10) {
 	size = 1;
     } if (count <= 50) {
@@ -40,6 +40,14 @@ function calculateSize(count) {
 	size = 28;
     } else {
 	size = 30;
+    }
+    return size;*/
+    count = Math.round(count / 3.14);
+    var size = Math.round(Math.sqrt(count));
+    if (size < 2) {
+	size = 2;
+    } else if (size > 100) {
+	size = 100;
     }
     return size;
 }
