@@ -134,6 +134,7 @@
     
     function analyse_topics() {
 	$("#spinner").show();
+	removeTopics();
 	var topic_count = parseInt($("#num_topics").val());
 	$("#topiccloud").empty();
 	performTopicModelling(topic_count);

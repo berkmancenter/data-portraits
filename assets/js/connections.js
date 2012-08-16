@@ -42,12 +42,12 @@ function calculateSize(count) {
 	size = 30;
     }
     return size;*/
-    count = Math.round(count / 3.14);
+    count = Math.round(count / 1.57);
     var size = Math.round(Math.sqrt(count));
     if (size < 2) {
 	size = 2;
-    } else if (size > 100) {
-	size = 100;
+    } else if (size > 75) {
+	size = 75;
     }
     return size;
 }
@@ -81,7 +81,7 @@ $(document).ready(function () {
 	} else {
 	    var freq = getPostingFrequency(connections[i].user.joined, connections[i].user.statuses_count);
 	    freq_all[connections[i].user.username] = freq;
-	    status_circle_size = calculateSize(freq*365);
+	    status_circle_size = calculateSize(0.5*freq*365 + 0.5*connections[i].user.statuses_count);
 	    g.addNode(connections[i].user.id, {label: connections[i].user.username, relation: connections[i].relation,
 		      status_count: status_circle_size});
 	}

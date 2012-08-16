@@ -259,7 +259,7 @@ Graph.Renderer.Raphael.prototype = {
                         main_color = node.relation=="follower"?"red":"blue";
                         sub_color = "yellow";
                     }
-                    var f = 1.2;
+                    var f = 0.8;
                     if (node.relation == "follower") {
                         var ele = r.ellipse(0, 0, f*main_size, f*main_size).attr({fill: main_color, stroke: sub_color, "stroke-width": f*diff});
                         var x=0;

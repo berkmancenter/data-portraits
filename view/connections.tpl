@@ -32,8 +32,10 @@
                 "<table><tr><td><img src=\"" + user.user.avatar+"\"/></td>" +
                 "<td style=\"margin-left:5px\">" + user.user.username + "</td></tr></table>" +
                 "<p>" + user.user.description + "</p>" +
-                "<p>Status count: <strong>" + user.user.statuses_count + "</strong></p>" +
-                "<p>" + user.user.username + " mostly talks about: </p>" ;
+                "<p>Following count: <strong>" + user.user.friends_count + "</strong></p>" +
+                "<p>Followers count: <strong>" + user.user.followers_count + "</strong></p>" +
+                "<p>Status count: <strong>" + user.user.statuses_count + "</strong></p>" 
+                "<p>" + user.user.username + " has recently been talking about: </p>" ;
             $.ajax({
                type: "POST",
                url: "{$site_root_path}pages/wordanalysis.php",
@@ -48,7 +50,8 @@
                 "<td style=\"margin-left:5px\">" + user.user.username + "</td></tr></table>" +
                 "<p>" + user.user.description + "</p>" +
                 "<p>Following count: <strong>" + user.user.friends_count + "</strong></p>" +
-                "<p>Followers count: <strong>" + user.user.followers_count + "</strong></p>";
+                "<p>Followers count: <strong>" + user.user.followers_count + "</strong></p>" +
+                "<p>Status count: <strong>" + user.user.statuses_count + "</strong></p>" ;
             $("#log").html(content);
         } else {
             $("#log").html("<p>Loading... Please Wait</p>");
@@ -57,8 +60,9 @@
                 "<td style=\"margin-left:5px\">" + user.user.username + "</td></tr></table>" +
                 "<p>" + user.user.description + "</p>" +
                 "<p>Following count: <strong>" + user.user.friends_count + "</strong></p>" +
+                "<p>Followers count: <strong>" + user.user.followers_count + "</strong></p>" +
                 "<p>Status count: <strong>" + user.user.statuses_count + "</strong></p>" +
-                "<p>" + user.user.username + " mostly talks about: </p>" ;
+                "<p>" + user.user.username + " has recently been talking about: </p>" ;
             $.ajax({
                type: "POST",
                url: "{$site_root_path}pages/wordanalysis.php",
