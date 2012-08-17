@@ -104,3 +104,16 @@ body {font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;}
 .color12 {color:#ffea00;}.bgcolor12{ background-color: #ffea00;}
 .color13 {color:#fff;}.bgcolor13{ background-color: #fff;}
 .color14 {color:#252525;}.bgcolor14{ background-color: #252525;}
+
+.footer_menu {
+    list-style-type:none;
+    margin:0;
+    padding:0;
+}
+.footer_menu li {
+    display: inline;
+}
+.footer_menu li a {
+    text-decoration: none;
+    color: black;
+}

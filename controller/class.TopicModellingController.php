@@ -29,20 +29,32 @@
  * 
  */
 require_once(ROOT_PATH."/controller/class.DPController.php");
+require_once(ROOT_PATH."/model/class.TopicModel.php");
 
 class TopicModellingController extends DPController {
     
     public function go() {
         
         if (get_magic_quotes_gpc()) {
-            $statuses = "var statuses = ".stripcslashes($_POST['statuses']).";";
+            $statuses = json_decode(stripcslashes($_POST['statuses']));
         } else {
-	    $statuses = "var statuses = ".$_POST['statuses'].";";
+	    $statuses = json_decode($_POST['statuses']);
         }
-        
-        $this->addToView('statuses', $statuses);
-        $this->setViewTemplate('topics.tpl');
-        return $this->generateView();
+        $model = new TopicModel();
+	$result = $model->analyse($statuses);
+	$num = "var num = ".json_encode($result['num']).";";
+	$tweets = "var tweets = ".json_encode($result['tweets']).";";
+	$topic_text = "var topic_text = ".json_encode($result['topic_text']).";";
+	$topic_text_values = "var topic_text_values = ".json_encode($result['topic_text_values']).";";
+	$this->addToView('num', $num);
+	$this->addToView('tweets', $tweets);
+	$this->addToView('topic_text', $topic_text);
+	$this->addToView('topic_text_values', $topic_text_values);
+        //$this->addToView('statuses', $statuses);
+        //$this->setViewTemplate('topics.tpl');
+        //return $this->generateView();
+	$this->setViewTemplate('topics_new.tpl');
+	return $this->generateView();
     }
     
 }

@@ -88,6 +88,11 @@ class Status {
     var $created_by;
     /**
      *
+     * @var str
+     */
+    var $created_by_id;
+    /**
+     *
      * @var array
      */
     var $hashtags;
@@ -134,6 +139,13 @@ class Status {
                     $this->created_by = $val->user->screen_name;
                 } else {
                     $this->created_by = $val->from_user;
+                }
+            }
+            if (isset($val->user->id_str) || isset($val->from_user_id)) {
+                if (isset($val->user->id_str)) {
+                    $this->created_by_id = $val->user->id_str;
+                } else {
+                    $this->created_by_id = $val->from_user_id;
                 }
             }
             $this->hashtags = self::processHashTags($val, $this->text_processed);
