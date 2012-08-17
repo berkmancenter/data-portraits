@@ -131,6 +131,7 @@
             data: "statuses="+json_statuses,
             success: function(msg){
                 $("#mainstage").html(msg);
+                $("#spinner").hide();
             }
         });
     }
