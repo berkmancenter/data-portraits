@@ -1,11 +1,26 @@
 <script type="text/javascript">{$connections}</script>
+<script type="text/javascript">{$mutuals}</script>
+<script type="text/javascript">{$type}</script>
 <script type="text/javascript">
+    var freq_all = new Object;
     $(document).ready(function(){
-        if (typeof connection_analysis.data != 'undefined') {
-            connections = connection_analysis.data;
+        /*if (typeof connection_analysis.mutuals == 'undefined') {
+            connection_analysis.mutuals = mutuals;
+            console.log(connection_analysis.mutuals);
+        }*/
+        if (type == "friend") {
+            if (typeof connection_analysis.friends != 'undefined') {
+                connections = connection_analysis.friends;
+            } else {
+                connection_analysis.friends = connections;
+            }
+        } else {
+            if (typeof connection_analysis.followers != 'undefined') {
+                connections = connection_analysis.followers;
+            } else {
+                connection_analysis.followers = connections;
+            }
         }
-        console.log(connections);
-        connection_analysis.data = connections;
     });
     function handleClick() {
         var user = connections[this.id];
@@ -17,7 +32,10 @@
                 "<table><tr><td><img src=\"" + user.user.avatar+"\"/></td>" +
                 "<td style=\"margin-left:5px\">" + user.user.username + "</td></tr></table>" +
                 "<p>" + user.user.description + "</p>" +
-                "<p>" + user.user.username + " mostly talks about: </p>" ;
+                "<p>Following count: <strong>" + user.user.friends_count + "</strong></p>" +
+                "<p>Followers count: <strong>" + user.user.followers_count + "</strong></p>" +
+                "<p>Status count: <strong>" + user.user.statuses_count + "</strong></p>" 
+                "<p>" + user.user.username + " has recently been talking about: </p>" ;
             $.ajax({
                type: "POST",
                url: "{$site_root_path}pages/wordanalysis.php",
@@ -31,7 +49,9 @@
                 "<table><tr><td><img src=\"" + user.user.avatar+"\"/></td>" +
                 "<td style=\"margin-left:5px\">" + user.user.username + "</td></tr></table>" +
                 "<p>" + user.user.description + "</p>" +
-                "<p>Following count: <strong>" + user.user.friends_count + "</strong></p>";
+                "<p>Following count: <strong>" + user.user.friends_count + "</strong></p>" +
+                "<p>Followers count: <strong>" + user.user.followers_count + "</strong></p>" +
+                "<p>Status count: <strong>" + user.user.statuses_count + "</strong></p>" ;
             $("#log").html(content);
         } else {
             $("#log").html("<p>Loading... Please Wait</p>");
@@ -39,8 +59,10 @@
                 "<table><tr><td><img src=\"" + user.user.avatar+"\"/></td>" +
                 "<td style=\"margin-left:5px\">" + user.user.username + "</td></tr></table>" +
                 "<p>" + user.user.description + "</p>" +
-                "<p>Following count: <strong>" + user.user.friends_count + "</strong></p>" + 
-                "<p>" + user.user.username + " mostly talks about: </p>" ;
+                "<p>Following count: <strong>" + user.user.friends_count + "</strong></p>" +
+                "<p>Followers count: <strong>" + user.user.followers_count + "</strong></p>" +
+                "<p>Status count: <strong>" + user.user.statuses_count + "</strong></p>" +
+                "<p>" + user.user.username + " has recently been talking about: </p>" ;
             $.ajax({
                type: "POST",
                url: "{$site_root_path}pages/wordanalysis.php",

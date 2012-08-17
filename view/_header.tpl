@@ -9,6 +9,26 @@
     </head>
 <body>
     <div id="main">
+        <div class="right" style="font-size: 0.7em">
+            <ul class="footer_menu center">
+                <li>
+                    <a href="http://cyber.law.harvard.edu/" target="_blank">About Us</a> |
+                </li>
+                <li>
+                    <a href="http://cyber.law.harvard.edu/dataportraits/Main_Page" target="_blank">
+                        About the Project
+                    </a> | 
+                </li>
+                <li>
+                    <a href="https://github.com/berkmancenter/data-portraits/wiki/_pages" target="_blank">
+                        Understanding Visualizations
+                    </a> |
+                </li> 
+                <li>
+                    <a href="https://github.com/berkmancenter/data-portraits" target="_blank">Source Code</a>
+                </li>
+            </ul>
+        </div>
         <div id="headerBar">
             <div>
                 <img class="left" id="logo" src="{$site_root_path}assets/images/logo.png"/>
