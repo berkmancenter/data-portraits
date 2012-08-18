@@ -34,7 +34,6 @@ require_once(ROOT_PATH."/model/class.TopicModel.php");
 class TopicModellingController extends DPController {
     
     public function go() {
-        
         if (get_magic_quotes_gpc()) {
             $statuses = json_decode(stripcslashes($_POST['statuses']));
         } else {
