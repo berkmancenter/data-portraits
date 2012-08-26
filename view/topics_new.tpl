@@ -93,9 +93,30 @@
 	for (var i=0; i<num_topics; i++) {
 	    active_topics[i] = 0;
 	}
+	$("#num_topics").val(num_topics);
 	displayTopics(num, topic_text, topic_text_values, tweets);
     });
+    
+    function topic_model_analyse() {
+	var val = $("#num_topics").val();
+	topicModelling(val);
+    }
 </script>
-
+<div>
+    <label>Number of Topics: </label>
+    <select name="num_topics" id="num_topics">
+	<option>1</option>
+	<option>2</option>
+	<option>3</option>
+	<option>4</option>
+	<option>5</option>
+	<option>6</option>
+	<option>7</option>
+	<option selected="selected">8</option>
+	<option>9</option>
+	<option>10</option>
+    </select>
+    <button id="go_topic" name="go_topic" onclick="topic_model_analyse()">Analyse</button>
+</div>
 <div id="topiccloud"></div>
 <br/>

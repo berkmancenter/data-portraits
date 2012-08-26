@@ -40,7 +40,8 @@ class TopicModellingController extends DPController {
         } else {
 	    $statuses = json_decode($_POST['statuses']);
         }
-	$topics = $this->performTopicModellingJava($statuses);
+	$topic_count = isset($_POST['val']) ? $_POST['val'] : 8;
+	$topics = $this->performTopicModellingJava($statuses, $topic_count);
         $model = new TopicModel();
 	$result = $model->finalStepTopicModelling($statuses, $topics);        // With Java
 	$num = "var num = ".json_encode($result['num']).";";
