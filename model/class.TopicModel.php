@@ -44,12 +44,29 @@ class TopicModel {
     const PERSONAL = 4;
     const OTHER = 5;
     
-    protected function init() {
+    public function finalStepTopicModelling($statuses, $topics) {
+        $this->num = count($topics);
+        $this->init();
+        $this->tweets = $topics;
+        $topic_status = array();
         for ($i = 0; $i < $this->num; $i++) {
-            $this->tweets[$i] = array();
-            $this->topic_text[$i] = array();
-            $this->topic_text_values[$i] = array();
+            $topic_status[$i] = array();
         }
+        for ($i = 0; $i < $this->num; $i++) {
+            foreach ($topics[$i] as $index) {
+                array_push($topic_status[$i], $statuses[$index]);
+            }
+        }
+        for ($i = 0; $i < $this->num; $i++) {
+            $this->analyzeText($topic_status[$i], $i);
+        }
+        $result = array(
+            'num' => $this->num,
+            'topic_text' => $this->topic_text,
+            'topic_text_values' => $this->topic_text_values,
+            'tweets' => $this->tweets
+        );
+        return $result;
     }
     
     public function analyse($statuses) {
@@ -116,6 +133,14 @@ class TopicModel {
             'tweets' => $this->tweets
         );
         return $result;
+    }
+    
+    protected function init() {
+        for ($i = 0; $i < $this->num; $i++) {
+            $this->tweets[$i] = array();
+            $this->topic_text[$i] = array();
+            $this->topic_text_values[$i] = array();
+        }
     }
     
     private static function getPronouns() {
