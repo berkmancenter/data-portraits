@@ -53,7 +53,7 @@
 		var shuffled = shuffle(topic_text[k], topic_text_values[k]);
 		topic_text[k] = shuffled[0];
 		topic_text_values[k] = shuffled[1];
-		table_topics += '<td class="width50">';
+		table_topics += '<td class="width50">'+getTitle(k);
 		table_topics += '<div id="topic'+k+'" class="tagCloud bgcolor'+k+'" onclick="color('+k+')"><ul class="tagList">';
 		for (var i in topic_text[k]) {
 		    if (topic_text_values[k][i] == 1) {
@@ -87,6 +87,17 @@
 	    $(this).css("height", word_height);
 	});
 	$("#spinner").hide();
+    }
+    
+    function getTitle(id) {
+        switch(id) {
+            case 0: return "Direct Replies";
+            case 1: return "Interactions";
+            case 2: return "With URLs";
+            case 3: return "With Hashtags";
+            case 4: return "Personal";
+            case 5: return "Others";
+        }
     }
     
     $(document).ready(function() {

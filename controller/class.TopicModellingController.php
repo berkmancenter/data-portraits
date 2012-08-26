@@ -41,14 +41,8 @@ class TopicModellingController extends DPController {
 	    $statuses = json_decode($_POST['statuses']);
         }
 	$topics = $this->performTopicModellingJava($statuses);
-	//Old Stuff
-        //$this->addToView('statuses', $statuses);
-        //$this->setViewTemplate('topics.tpl');
-        //return $this->generateView();
         $model = new TopicModel();
-	//$result = $model->analyse($statuses);                               // Simpler Topic Modelling
 	$result = $model->finalStepTopicModelling($statuses, $topics);        // With Java
-	//$result = $model->analyse($statuses);
 	$num = "var num = ".json_encode($result['num']).";";
 	$tweets = "var tweets = ".json_encode($result['tweets']).";";
 	$topic_text = "var topic_text = ".json_encode($result['topic_text']).";";
@@ -73,7 +67,6 @@ class TopicModellingController extends DPController {
 	$path = ROOT_PATH."/bin/topics/LDA.jar";
 	$cmd = "java -jar $path $count $vocab_count $filename $topic_count";
 	exec($cmd, $output);
-	print_r($output);
 	$topics = array();
         for ($i = 0; $i < $topic_count; $i++) {
             $topics[$i] = array();
