@@ -295,7 +295,7 @@ Graph.Renderer.Raphael.prototype = {
                 ele.node.onclick = handleClick;
                 shape = r.set().
                     push(ele).
-                    push(r.text(x, y, node.label || node.id));
+                    push(r.text(x, y, node.label || node.id).attr({color: "red"}));
                 return shape;
             }
         }
