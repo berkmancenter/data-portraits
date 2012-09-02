@@ -1,2 +1,4 @@
 view/compiled_view/
 cache/
+data/topics/
+config.inc.php

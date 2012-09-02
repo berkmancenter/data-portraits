@@ -53,7 +53,7 @@
 		var shuffled = shuffle(topic_text[k], topic_text_values[k]);
 		topic_text[k] = shuffled[0];
 		topic_text_values[k] = shuffled[1];
-		table_topics += '<td class="width50">';
+		table_topics += '<td class="width50">'+getTitle(k);
 		table_topics += '<div id="topic'+k+'" class="tagCloud bgcolor'+k+'" onclick="color('+k+')"><ul class="tagList">';
 		for (var i in topic_text[k]) {
 		    if (topic_text_values[k][i] == 1) {
@@ -89,34 +89,24 @@
 	$("#spinner").hide();
     }
     
+    function getTitle(id) {
+        switch(id) {
+            case 0: return "Direct Replies";
+            case 1: return "Interactions";
+            case 2: return "With URLs";
+            case 3: return "With Hashtags";
+            case 4: return "Personal";
+            case 5: return "Others";
+        }
+    }
+    
     $(document).ready(function() {
 	for (var i=0; i<num_topics; i++) {
 	    active_topics[i] = 0;
 	}
-	$("#num_topics").val(num_topics);
 	displayTopics(num, topic_text, topic_text_values, tweets);
     });
-    
-    function topic_model_analyse() {
-	var val = $("#num_topics").val();
-	topicModelling(val);
-    }
 </script>
-<div>
-    <label>Number of Topics: </label>
-    <select name="num_topics" id="num_topics">
-	<option>1</option>
-	<option>2</option>
-	<option>3</option>
-	<option>4</option>
-	<option>5</option>
-	<option>6</option>
-	<option>7</option>
-	<option selected="selected">8</option>
-	<option>9</option>
-	<option>10</option>
-    </select>
-    <button id="go_topic" name="go_topic" onclick="topic_model_analyse()">Analyse</button>
-</div>
+
 <div id="topiccloud"></div>
 <br/>

@@ -35,7 +35,11 @@ require_once(ROOT_PATH."/model/class.ConnectionProcessing.php");
 class ConnectionsController extends DPController {
     
     public function go() {
-        $this->setViewTemplate("connections.tpl");
+        if (isset($_POST['type']) && $_POST["type"] == "friend") {
+            $this->setViewTemplate("friends.tpl");
+        } else {
+            $this->setViewTemplate("followers.tpl");
+        }
         if (isset($_POST['username'])) {
             $statuses = json_decode($_POST['statuses']);
             $people = self::crawl($_POST['username'], $statuses);
@@ -67,8 +71,6 @@ class ConnectionsController extends DPController {
         );
         $connection = new Crawler($authentication);
         if (isset($_POST['mutuals'])) {
-            echo $_POST['mutuals'];
-            print_r(json_decode($_POST['mutuals']));
             $connection_processing = new ConnectionProcessing($connection, $vals, $_POST['mutuals']);
         } else {
             $connection_processing = new ConnectionProcessing($connection, $vals, null);

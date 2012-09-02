@@ -9,7 +9,7 @@
             </td>
             <td class="column_separator"></td>
             <td class="column_main">
-                <div class="info">
+                <div class="info center">
                     <a class="center_image" href="{$site_root_path}crawler/login.php">
                         <img width="300" src="{$site_root_path}assets/images/darker.png" />
                     </a>

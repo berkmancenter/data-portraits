@@ -29,7 +29,7 @@
                 </li>
             </ul>
         </div>
-        <div id="headerBar">
+        <div id="headerBar" class="headerBarHeight">
             <div>
                 <img class="left" id="logo" src="{$site_root_path}assets/images/logo.png"/>
                 <p id="org"><span id="berkman">BERKMAN CENTER FOR INTERNET AND SOCIETY</span><br/>

@@ -44,7 +44,15 @@ class WordAnalysisController extends DPController {
                     'token' => $_SESSION['oauth_token'],
                     'token_secret' => $_SESSION['oauth_secret']
                 );
-                
+                if (isset($_POST['left'])) {
+                    $this->addToView('pos_left', $_POST['left']);
+                }
+                if (isset($_POST['top'])) {
+                    $this->addToView('pos_top', $_POST['top']);
+                }
+                if (isset($_POST['relation'])) {
+                    $this->addToView('relation', $_POST['relation']);
+                }
                 $vals = array(
                     'screen_name' => $_POST["username"]
                 );
