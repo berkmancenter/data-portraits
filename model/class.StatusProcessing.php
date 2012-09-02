@@ -30,6 +30,7 @@
  */
 require_once(ROOT_PATH."/model/class.Status.php");
 require_once(ROOT_PATH."/model/class.SentimentDictionary.php");
+require_once(ROOT_PATH."/model/class.PartsOfSpeechTagger.php");
 require_once(ROOT_PATH."/model/class.Utils.php");
 
 class StatusProcessing {
@@ -281,12 +282,50 @@ class StatusProcessing {
     
     public static function findSentiment($statuses) {
         $dict = new SentimentDictionary();
+        $pos = new PartsOfSpeechTagger();
         $status_sentiment = array();
         foreach ($statuses as $status) {
             $words = explode(' ', $status->text_processed);
             $score = 0;
+            $i = 0;
+            $length = 0;
             foreach ($words as $word) {
+                if ($length != 0) {
+                    $length--;
+                    continue;
+                }
+                if ($word == "not" || strstr($word, "n't")) {
+                    $tags = $pos->tag(str_replace("'", "", $status->text_processed));
+                    $length = 0;
+                    for ($j = 1; $j <= 5; $j++) {
+                        if (isset($words[$i+$j])) {
+                            $search_string = $word;
+                            for ($k = 1; $k <= $j; $k++) {
+                                $search_string .= " ".$words[$i+$k];
+                            }
+                            if (strstr(strtolower($status->text), $search_string)) {
+                                $length++;
+                                if (strstr($tags[$i+$j]['tag'], "NN")) {
+                                    break;
+                                }
+                            } else {
+                                break;
+                            }
+                        }
+                    }
+                    $lookahead_sentiment = 0;
+                    for ($j = 1; $j <= $length; $j++) {
+                        $lookahead_sentiment += $dict->getWordSentiment($words[$i+$j]);
+                    }
+                    if ($lookahead_sentiment < 0) {
+                        $score += $lookahead_sentiment*-1;
+                        continue;
+                    } else {
+                        $length = 0;
+                    }
+                }
                 $score += $dict->getWordSentiment($word);
+                $i++;
             }
             $score = $score/count($words);
             if ($status->emoticons != false) {

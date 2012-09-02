@@ -10,6 +10,9 @@
         var size;
         var max_words = new Array;
         var max_words_limit = 20;
+        var pos_left = ({$pos_left}-270)+"px";
+        var pos_top = ({$pos_top}-130)+"px";
+        var relation = "{$relation}";
     {literal}
         for (var word in words) {
             if (words[word]['total'] < avg) {
@@ -26,11 +29,16 @@
             }
             max_words_count ++;*/
         }
+        var box = "<div class=\""+relation+"\" style=\"width: 70px; height:70px; position: absolute; left: "+pos_left+"; top: "+pos_top+"\">";
         max_words.sort(compare);
         final = new Array;
         for (var i=0; i<max_words_limit; i++) {
             $("#words_secondary").append("<li>"+max_words[i].word+"</li>");
+            if (i < 8) {
+                box += max_words[i].word+" ";
+            }
         }
+        $("#words_all").append(box);
     });
     function compare(a,b) {
         if (a.count < b.count)

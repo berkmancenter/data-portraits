@@ -11,12 +11,12 @@ body {height:95%;}
 }
 
 .stretch { width:100%; height:100%; opacity: 0.4;}
-
+.headerBarHeight {height: 15%;}
 #logo {height: 25px; padding: 10px; padding-top: 0px}
 #berkman {font-weight: bold; font-size:0.6em;}
 #harvard {font-size: 0.6em;}
 #appname {margin-top: -5px; margin-left:65px;}
-#mainTable {width: 90%; margin: auto; margin-top:3%;}
+#mainTable {width: 90%; margin: auto; height: 85%; margin-top: 0;}
 #contentTable {width: 98%; height: 90%; overflow: scroll; margin:0px; padding: 0px;}
 
 .column_main {width:47%;}
