@@ -29,6 +29,7 @@
  * 
  */
 require_once(ROOT_PATH."/controller/class.DPController.php");
+require_once(ROOT_PATH."/model/class.Crawler.php");
 require_once(ROOT_PATH."/model/class.TopicModel.php");
 require_once(ROOT_PATH."/model/class.StatusProcessing.php");
 
@@ -57,6 +58,23 @@ class TopicModellingController extends DPController {
     }
     
     private function performTopicModellingJava($statuses, $topic_count = 10) {
+	$mentions = StatusProcessing::findMentions($statuses);
+	arsort($mentions);
+	$top_mentions = array_splice($mentions, 0, 5);
+	$mentions_tweets = array();
+	$authentication = array(
+            'token' => $_SESSION['oauth_token'],
+            'token_secret' => $_SESSION['oauth_secret']
+        );
+	$connection = new Crawler($authentication);
+	foreach ($top_mentions as $user => $mention) {
+	    $vals = array(
+		'screen_name' => $user
+	    );
+	    $tweets = StatusProcessing::getUserTimeline($connection, $vals);
+	    $mentions_tweets = array_merge($mentions_tweets, $tweets);
+	}
+	$statuses = array_merge($statuses, $mentions_tweets);
 	$documents = $this->extractDocuments($statuses);
 	$count = count($documents);
 	$username = $_SESSION['access_token']['screen_name'];
