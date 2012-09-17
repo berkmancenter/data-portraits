@@ -52,8 +52,12 @@ class TopicModel {
         for ($i = 0; $i < $this->num; $i++) {
             $topic_status[$i] = array();
         }
+        $count_original_statuses = count($statuses);
         for ($i = 0; $i < $this->num; $i++) {
             foreach ($topics[$i] as $index) {
+                if ($index >= $count_original_statuses) {
+                    continue;
+                }
                 array_push($topic_status[$i], $statuses[$index]);
             }
         }
